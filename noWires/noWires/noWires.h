@@ -1,7 +1,9 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <QStatusBar>
 #include "ui_noWires.h"
+
 
 class noWires : public QMainWindow
 {
