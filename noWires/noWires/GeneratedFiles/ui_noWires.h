@@ -25,9 +25,9 @@ QT_BEGIN_NAMESPACE
 class Ui_noWiresClass
 {
 public:
+    QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
-    QWidget *centralWidget;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *noWiresClass)
@@ -35,15 +35,16 @@ public:
         if (noWiresClass->objectName().isEmpty())
             noWiresClass->setObjectName(QStringLiteral("noWiresClass"));
         noWiresClass->resize(600, 400);
-        menuBar = new QMenuBar(noWiresClass);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        noWiresClass->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(noWiresClass);
-        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        noWiresClass->addToolBar(mainToolBar);
         centralWidget = new QWidget(noWiresClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         noWiresClass->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(noWiresClass);
+        menuBar->setObjectName(QStringLiteral("menuBar"));
+        menuBar->setGeometry(QRect(0, 0, 600, 21));
+        noWiresClass->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(noWiresClass);
+        mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
+        noWiresClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(noWiresClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         noWiresClass->setStatusBar(statusBar);
