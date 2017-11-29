@@ -5,6 +5,7 @@
 #include <QFiledialog>
 #include <QDesktopservices>
 #include <QDebug>
+#include <QSerialPort>
 
 #include <iostream>
 #include <fstream> 
@@ -23,10 +24,16 @@ private:
 	QString fileName;
 	std::ifstream inputFile;
 	bool fileOpen;
+	QSerialPort *serial;
 
 	Ui::noWiresClass ui;
 	inline void addButtons();
 	void startSending();
 	void openAFile();
+	void sendData(QByteArray toSend);
+	void connectPort();
+
+public slots:
+	void readData();
 };
 
