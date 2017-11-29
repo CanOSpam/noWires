@@ -11,17 +11,10 @@ noWires::noWires(QWidget *parent)
 
 inline void noWires::addButtons()
 {
-	QToolBar* toolbar = ui.mainToolBar;
 
-	openButton = new QPushButton("Open File", this);
-	sendButton = new QPushButton("Send", this);
-	sendButton->setEnabled(false);
-
-	connect(sendButton, &QPushButton::pressed, this, &noWires::startSending);
-	connect(openButton, &QPushButton::pressed, this, &noWires::openAFile);
-	
-	toolbar->addWidget(openButton);
-	toolbar->addWidget(sendButton);
+	connect(ui.actionSend, &QAction::triggered, this, &noWires::startSending);
+	connect(ui.actionOpen_File, &QAction::triggered, this, &noWires::openAFile);
+	ui.actionSend->setEnabled(false);
 }
 
 void noWires::startSending()
@@ -34,13 +27,15 @@ void noWires::openAFile()
 {
 	fileName = QFileDialog::getOpenFileName(this,
 		tr("Choose File to Send"), "./", tr("Text File (*.txt)"));
+	qDebug() << fileName;
 
 	inputFile.open(fileName.toStdString());
+	ui.actionSend->setEnabled(false);
 
 	if (inputFile.is_open())
 	{
 		fileOpen = true;
-		sendButton->setEnabled(true);
+		ui.actionSend->setEnabled(true);
 		statusBar()->showMessage(tr("Ready to send"));
 	}
 }

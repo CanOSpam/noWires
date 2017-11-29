@@ -4,6 +4,7 @@
 #include <QPushbutton>
 #include <QFiledialog>
 #include <QDesktopservices>
+#include <QDebug>
 
 #include <iostream>
 #include <fstream> 
@@ -22,8 +23,6 @@ private:
 	QString fileName;
 	std::ifstream inputFile;
 	bool fileOpen;
-	QPushButton* sendButton;
-	QPushButton* openButton;
 
 	Ui::noWiresClass ui;
 	inline void addButtons();
