@@ -52,11 +52,10 @@ void noWires::readData()
 	QByteArray data = serial->readAll();
 
 	//enq
-	if (data[0] = 0x05)
+	if (data[0] = ENQ)
 	{
 		QByteArray send;
-		send.resize(1);
-		send[0] = 0x06; //ack
+		send.append(ACK);
 		sendData(send);
 	}
 }

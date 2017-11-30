@@ -12,6 +12,9 @@
 
 #include "ui_noWires.h"
 
+#define ACK 0x06
+#define ENQ 0x05
+
 class noWires : public QMainWindow
 {
 	Q_OBJECT

@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
       <Extensions>qrc;*</Extensions>
@@ -28,14 +20,17 @@
       <Extensions>moc;h;cpp</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Frames">
+      <UniqueIdentifier>{b7c6bc85-ba9e-469a-8089-7a2dcd434a6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{5f069453-8aae-45d7-a1d7-ac97a6004b53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{0fd9c460-dfbc-4b33-94c4-9183b1020b9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="noWires.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
@@ -45,21 +40,42 @@
     <ClCompile Include="GeneratedFiles\qrc_noWires.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="noWires.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="controlFrame.cpp">
+      <Filter>Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="dataFrame.cpp">
+      <Filter>Frames</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="noWires.h">
-      <Filter>Header Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="noWires.ui">
       <Filter>Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="noWires.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="noWires.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_noWires.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="frame.h">
+      <Filter>Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="controlFrame.h">
+      <Filter>Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="dataFrame.h">
+      <Filter>Frames</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
