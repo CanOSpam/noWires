@@ -71,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="controlFrame.cpp" />
     <ClCompile Include="dataFrame.cpp" />
+    <ClCompile Include="frame.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -115,6 +116,7 @@
     <ClInclude Include="dataFrame.h" />
     <ClInclude Include="frame.h" />
     <ClInclude Include="GeneratedFiles\ui_noWires.h" />
+    <ClInclude Include="uintOperators.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.qrc">

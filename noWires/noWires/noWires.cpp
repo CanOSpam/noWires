@@ -10,8 +10,24 @@ noWires::noWires(QWidget *parent)
 	serial =  &QSerialPort("COM1", this);
 
 	
-	connectPort();
+	//connectPort();
+
+	//TESTING FRAMES DELETE IN RELEASE
+	QByteArray full(512, 0x2A);
+	QByteArray notFull(300, 0x2A);
+
+	dataFrame dataFrameFull(full);
+	dataFrame dataFrameNotFull(notFull);
+
+	controlFrame ack(QByteArray(1, ACK));
+	controlFrame enq(QByteArray(1, ENQ));
 	
+	qDebug() << "dataframe full\n" << dataFrameFull.getFrame() << "\n";
+	qDebug() << "size: " << dataFrameFull.getFrame().size() << "\n";
+	qDebug() << "dataframe not full\n" << dataFrameNotFull.getFrame() << "\n";
+	qDebug() << "size: " << dataFrameNotFull.getFrame().size() << "\n";
+	qDebug() << "controlframe ack\n" << ack.getFrame() << "\n";
+	qDebug() << "controlframe enq\n" << enq.getFrame() << "\n";
 }
 
 inline void noWires::addButtons()

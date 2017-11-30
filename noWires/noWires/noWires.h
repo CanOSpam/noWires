@@ -11,6 +11,8 @@
 #include <fstream> 
 
 #include "ui_noWires.h"
+#include "controlFrame.h"
+#include "dataFrame.h"
 
 #define ACK 0x06
 #define ENQ 0x05

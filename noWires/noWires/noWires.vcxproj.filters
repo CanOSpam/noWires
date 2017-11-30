@@ -29,6 +29,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{0fd9c460-dfbc-4b33-94c4-9183b1020b9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="uint Operators">
+      <UniqueIdentifier>{c8d65618-5cbf-4431-bf56-260e120a40b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
@@ -50,6 +53,9 @@
       <Filter>Frames</Filter>
     </ClCompile>
     <ClCompile Include="dataFrame.cpp">
+      <Filter>Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="frame.cpp">
       <Filter>Frames</Filter>
     </ClCompile>
   </ItemGroup>
@@ -76,6 +82,9 @@
     </ClInclude>
     <ClInclude Include="dataFrame.h">
       <Filter>Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="uintOperators.h">
+      <Filter>uint Operators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
