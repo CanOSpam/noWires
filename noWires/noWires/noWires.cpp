@@ -13,8 +13,8 @@ noWires::noWires(QWidget *parent)
 	//connectPort();
 
 	//TESTING FRAMES DELETE IN RELEASE
-	QByteArray full(512, 0x2A);
-	QByteArray notFull(300, 0x2A);
+	QByteArray full(512, 0x07);
+	QByteArray notFull(300, 0x07);
 
 	dataFrame dataFrameFull(full);
 	dataFrame dataFrameNotFull(notFull);
