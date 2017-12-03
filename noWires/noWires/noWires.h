@@ -16,6 +16,8 @@
 
 #define ACK 0x06
 #define ENQ 0x05
+#define SYN 0x16
+
 
 class noWires : public QMainWindow
 {
@@ -37,6 +39,10 @@ private:
 	void openAFile();
 	void sendData(QByteArray toSend);
 	void connectPort();
+	void getControlToSend();
+	void receivingFrame(QByteArray toReceive);
+
+
 
 public slots:
 	void readData();

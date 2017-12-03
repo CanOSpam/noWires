@@ -42,6 +42,31 @@ void noWires::startSending()
 {
 	//Start Protocol
 	statusBar()->showMessage(tr("Sending"));
+	
+	char character;
+	while (true)
+	{
+		QByteArray data;
+		for (int i = 0; i < 512; i++) {
+			inputFile.get(character);
+			if (inputFile.fail())
+			{
+				break;
+			}
+			data[i] = character;
+		}
+		dataFrame frame(data);
+		std::cout << frame.getFrame().toStdString();
+		//serial->write(frame.getFrame());
+		break;
+	}
+	inputFile.close();
+
+}
+
+void noWires::receivingFrame(QByteArray toReceive)
+{
+
 }
 
 void noWires::openAFile()
@@ -68,12 +93,17 @@ void noWires::readData()
 	QByteArray data = serial->readAll();
 
 	//enq
-	if (data[0] = ENQ)
+	if ((data[0] = SYN) && (data[1] = ENQ))
 	{
-		QByteArray send;
-		send.append(ACK);
-		sendData(send);
+		controlFrame ack(QByteArray(1, ACK));
+		serial->write(ack.getFrame());
 	}
+}
+
+void noWires::getControlToSend()
+{
+	controlFrame enq(QByteArray(1, ENQ));
+	serial->write(enq.getFrame());
 }
 
 void noWires::sendData(QByteArray toSend)
