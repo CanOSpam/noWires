@@ -36,8 +36,9 @@ QByteArray dataFrame::getCRC()
 {
 	QByteArray byteCheckSum;
 
-	quint16 checkSum = qChecksum(mStuffedData, 512);
-	byteCheckSum << checkSum;
+	quint32 crc = CRC::Calculate(mStuffedData, 512, CRC::CRC_32());
+
+	byteCheckSum << crc;
 
 	return byteCheckSum;
 }

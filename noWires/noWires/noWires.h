@@ -14,6 +14,7 @@
 #include "controlFrame.h"
 #include "dataFrame.h"
 #include "textBox.h"
+#include "CRCpp.h"
 
 
 #define ACK 0x06

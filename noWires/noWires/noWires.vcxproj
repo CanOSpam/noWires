@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="controlFrame.h" />
+    <ClInclude Include="CRCpp.h" />
     <ClInclude Include="dataFrame.h" />
     <ClInclude Include="frame.h" />
     <ClInclude Include="GeneratedFiles\ui_noWires.h" />
