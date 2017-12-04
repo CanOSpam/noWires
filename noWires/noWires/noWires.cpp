@@ -73,7 +73,7 @@ void noWires::startSending()
 //jc
 void noWires::receivingFrame(QByteArray toReceive)
 {
-	if ((toReceive[0] = SYN) & (toReceive[1] = STX))
+	if ((toReceive[0] == (char)SYN) & (toReceive[1] = (char)STX))
 	{
 		//check CRC
 		QByteArray data;
