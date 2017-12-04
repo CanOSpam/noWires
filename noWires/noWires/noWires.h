@@ -45,7 +45,6 @@ private:
 	void sendData(QByteArray toSend);
 	void connectPort();
 	void getControlToSend();
-	void receivingFrame(QByteArray toReceive);
 
 
 

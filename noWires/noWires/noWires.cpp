@@ -10,7 +10,7 @@ noWires::noWires(QWidget *parent)
 	addButtons();
 
 	bool ok;
-	QString comPort = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+	QString comPort = QInputDialog::getText(this, tr("Com picker"),
 		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
 
 	serial =  new QSerialPort(comPort, this);
@@ -68,43 +68,10 @@ void noWires::startSending()
 		dataFrame frame(data);
 		std::cout << frame.getFrame().toStdString();
 		serial->write(frame.getFrame());
-		receivingFrame(frame.getFrame());
 		break;
 	}
 	inputFile.close();
 
-}
-
-//jc
-void noWires::receivingFrame(QByteArray toReceive)
-{
-	if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
-	{
-		//check CRC
-		QByteArray data;
-		QByteArray receivedCheckSum;
-
-		for (int i = 0; i < 512; i++)
-		{
-			data[i] = toReceive[i + 2];
-		}
-		for (int i = 514; i < 518; i++)
-		{
-			receivedCheckSum.append(toReceive[i]);
-		}
-
-		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
-
-		QByteArray calculatedByteCheckSum;
-		calculatedByteCheckSum << crc;
-		
-		if (calculatedByteCheckSum == receivedCheckSum)
-		{
-			textBox->putData(data);
-		}
-
-
-	}
 }
 
 void noWires::openAFile()
@@ -128,13 +95,41 @@ void noWires::openAFile()
 
 void noWires::readData()
 {
-	QByteArray data = serial->readAll();
+	QByteArray toReceive = serial->readAll();
 
 	//enq
-	if ((data[0] == (char)SYN) && (data[1] == (char)ENQ))
+	if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)ENQ))
 	{
 		controlFrame ack(QByteArray(1, ACK));
 		serial->write(ack.getFrame());
+	}
+	//data
+	else if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
+	{
+		//check CRC
+		QByteArray data;
+		QByteArray receivedCheckSum;
+
+		for (int i = 0; i < 512; i++)
+		{
+			data[i] = toReceive[i + 2];
+		}
+		for (int i = 514; i < 518; i++)
+		{
+			receivedCheckSum.append(toReceive[i]);
+		}
+
+		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
+
+		QByteArray calculatedByteCheckSum;
+		calculatedByteCheckSum << crc;
+
+		if (calculatedByteCheckSum == receivedCheckSum)
+		{
+			textBox->putData(data);
+		}
+
+
 	}
 }
 
