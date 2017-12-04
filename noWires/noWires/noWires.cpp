@@ -83,7 +83,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 		{
 			data[i] = toReceive[i + 2];
 		}
-		for (int i = 514; i < 516; i++)
+		for (int i = 514; i < 518; i++)
 		{
 			receivedCheckSum.append(toReceive[i]);
 		}
@@ -93,7 +93,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 		QByteArray calculatedByteCheckSum;
 		calculatedByteCheckSum << crc;
 		
-		if (*calculatedByteCheckSum == *receivedCheckSum)
+		if (calculatedByteCheckSum == receivedCheckSum)
 		{
 			textBox->putData(data);
 		}
