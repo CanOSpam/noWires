@@ -14,5 +14,6 @@ public:
 
 protected:
 	QByteArray mData;
+	QByteArray mStuffedData;
 
 };

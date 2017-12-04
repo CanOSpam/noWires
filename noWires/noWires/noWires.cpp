@@ -8,19 +8,17 @@ noWires::noWires(QWidget *parent)
 	fileOpen = false;
 
 	addButtons();
-	//from Tim's working asn1, idk y this works
 	serial = new QSerialPort("COM1", this);
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
 
-	//connect(serial, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error), this, &noWires::handleException);
-	//connectPort(); //dont call it here, call it in listener
+	//connectPort(); //dont call it here
+	demo_Frames();
 	//TESTING FRAMES DELETE IN RELEASE
-	//demo_Frames
+	
 }
-
-void demo_Frames()
+void noWires::demo_Frames()
 {
 	QByteArray full(512, 0x07);
 	QByteArray notFull(300, 0x07);
@@ -52,7 +50,7 @@ void noWires::startSending()
 	//Start Protocol
 	connectPort();
 	statusBar()->showMessage(tr("Sending"));
-		
+	
 	char character;
 	while (true)
 	{
@@ -77,25 +75,27 @@ void noWires::startSending()
 //jc
 void noWires::receivingFrame(QByteArray toReceive)
 {
-	if ((toReceive[0] = SYN) & (toReceive[1] = STX))
+	if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
 	{
 		//check CRC
 		QByteArray data;
-		QByteArray receivedCRCFrame;
+		QByteArray receivedCheckSum;
 
 		for (int i = 0; i < 512; i++)
 		{
 			data[i] = toReceive[i + 2];
 		}
-		for (int i = 514; i < 516; i++)
+		for (int i = 514; i < 518; i++)
 		{
-			receivedCRCFrame.append(toReceive[i]);
+			receivedCheckSum.append(toReceive[i]);
 		}
-		quint16 calculatedCRCInt = qChecksum(toReceive, 514);
-		QByteArray calculatedCRCFrame;
-		calculatedCRCFrame << calculatedCRCInt;
+
+		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
+
+		QByteArray calculatedByteCheckSum;
+		calculatedByteCheckSum << crc;
 		
-		if (*calculatedCRCFrame == *receivedCRCFrame)
+		if (*calculatedByteCheckSum == *receivedCheckSum)
 		{
 			textBox->putData(data);
 		}

@@ -1,5 +1,6 @@
 #include "dataFrame.h"
 
+
 dataFrame::dataFrame(QByteArray data)
 	: frame(data)
 {
@@ -16,23 +17,28 @@ QByteArray dataFrame::getFrame()
 	{
 		frame.append(mData);
 		frame.append(QByteArray(512 - mData.size(), 0x00));
+		mStuffedData.clear();
+		mStuffedData.append(mData);
+		mStuffedData.append(QByteArray(512 - mData.size(), 0x00));
 	}
 	else
 	{
 		frame.append(mData);
+		mStuffedData.append(mData);
 	}
 
-	frame.append(getCRC(frame));
+	frame.append(getCRC());
 	
 	return frame;
 }
 
-QByteArray dataFrame::getCRC(QByteArray data)
+QByteArray dataFrame::getCRC()
 {
 	QByteArray byteCheckSum;
 
-	quint16 checkSum = qChecksum(data, 514);
-	byteCheckSum << checkSum;
+	quint32 crc = CRC::Calculate(mStuffedData, 512, CRC::CRC_32());
+
+	byteCheckSum << crc;
 
 	return byteCheckSum;
 }

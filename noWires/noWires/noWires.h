@@ -15,6 +15,7 @@
 #include "controlFrame.h"
 #include "dataFrame.h"
 #include "textBox.h"
+#include "CRCpp.h"
 
 
 #define ACK 0x06
@@ -45,10 +46,11 @@ private:
 	void connectPort();
 	void getControlToSend();
 	void receivingFrame(QByteArray toReceive);
-	void handleException(QSerialPort::SerialPortError e);
 	void closePort();
-
+	void handleException(QSerialPort::SerialPortError e);
 	void demo_Frames();
+
+
 public slots:
 	void readData();
 };
