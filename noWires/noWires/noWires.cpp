@@ -8,13 +8,13 @@ noWires::noWires(QWidget *parent)
 	fileOpen = false;
 
 	addButtons();
-	serial =  &QSerialPort("COM1", this);
+	serial =  new QSerialPort("COM1", this);
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
 
 	
-	//connectPort();
+	connectPort();
 
 	//TESTING FRAMES DELETE IN RELEASE
 	QByteArray full(512, 0x07);
@@ -62,7 +62,7 @@ void noWires::startSending()
 		}
 		dataFrame frame(data);
 		std::cout << frame.getFrame().toStdString();
-		//serial->write(frame.getFrame());
+		serial->write(frame.getFrame());
 		receivingFrame(frame.getFrame());
 		break;
 	}
@@ -126,7 +126,7 @@ void noWires::readData()
 	QByteArray data = serial->readAll();
 
 	//enq
-	if ((data[0] = SYN) && (data[1] = ENQ))
+	if ((data[0] == (char)SYN) && (data[1] == (char)ENQ))
 	{
 		controlFrame ack(QByteArray(1, ACK));
 		serial->write(ack.getFrame());
@@ -147,13 +147,15 @@ void noWires::sendData(QByteArray toSend)
 void noWires::connectPort()
 {
 	//Set defaults
+	serial->setPortName("COM1");
 	serial->setBaudRate(QSerialPort::Baud9600);
 	serial->setDataBits(QSerialPort::Data8);
 	serial->setParity(QSerialPort::NoParity);
 	serial->setStopBits(QSerialPort::OneStop);
 	serial->setFlowControl(QSerialPort::NoFlowControl);
 
-	if (!serial->open(QIODevice::ReadWrite)) {
+	if (!serial->open(QIODevice::ReadWrite)) 
+	{
 		qDebug() << serial->errorString();
 		return;
 	}
