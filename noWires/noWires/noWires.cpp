@@ -8,7 +8,12 @@ noWires::noWires(QWidget *parent)
 	fileOpen = false;
 
 	addButtons();
-	serial =  new QSerialPort("COM1", this);
+
+	bool ok;
+	QString comPort = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
+
+	serial =  new QSerialPort(comPort, this);
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);

@@ -6,6 +6,7 @@
 #include <QDesktopservices>
 #include <QDebug>
 #include <QSerialPort>
+#include <QInputDialog>
 
 #include <iostream>
 #include <fstream> 
