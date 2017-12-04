@@ -35,6 +35,9 @@
     <Filter Include="textbox">
       <UniqueIdentifier>{b4c87a71-c382-466a-8104-92127d59b36f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CRCpp">
+      <UniqueIdentifier>{d957b14d-4dc5-4a49-b765-9dc5aa225a4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
@@ -103,6 +106,9 @@
     </ClInclude>
     <ClInclude Include="uintOperators.h">
       <Filter>uint Operators</Filter>
+    </ClInclude>
+    <ClInclude Include="CRCpp.h">
+      <Filter>CRCpp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

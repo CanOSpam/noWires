@@ -1,6 +1,7 @@
 #pragma once
 #include "frame.h"
 #include "uintOperators.h"
+#include "CRCpp.h"
 #include <QDebug>
 
 

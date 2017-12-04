@@ -87,9 +87,11 @@ void noWires::receivingFrame(QByteArray toReceive)
 		{
 			receivedCheckSum.append(toReceive[i]);
 		}
-		quint16 calculatedCheckSum = qChecksum(data, 512);
+
+		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
+
 		QByteArray calculatedByteCheckSum;
-		calculatedByteCheckSum << calculatedCheckSum;
+		calculatedByteCheckSum << crc;
 		
 		if (*calculatedByteCheckSum == *receivedCheckSum)
 		{
