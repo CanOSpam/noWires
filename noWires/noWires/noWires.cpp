@@ -87,7 +87,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 		{
 			receivedCheckSum.append(toReceive[i]);
 		}
-		quint16 calculatedCheckSum = qChecksum(toReceive, 514);
+		quint16 calculatedCheckSum = qChecksum(data, 512);
 		QByteArray calculatedByteCheckSum;
 		calculatedByteCheckSum << calculatedCheckSum;
 		
