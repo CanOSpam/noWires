@@ -8,15 +8,20 @@ noWires::noWires(QWidget *parent)
 	fileOpen = false;
 
 	addButtons();
-	serial =  &QSerialPort("COM1", this);
+	//from Tim's working asn1, idk y this works
+	serial = new QSerialPort("COM1", this);
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
 
-	
-	//connectPort();
-
+	//connect(serial, static_cast<void (QSerialPort::*)(QSerialPort::SerialPortError)>(&QSerialPort::error), this, &noWires::handleException);
+	//connectPort(); //dont call it here, call it in listener
 	//TESTING FRAMES DELETE IN RELEASE
+	//demo_Frames
+}
+
+void demo_Frames()
+{
 	QByteArray full(512, 0x07);
 	QByteArray notFull(300, 0x07);
 
@@ -25,7 +30,7 @@ noWires::noWires(QWidget *parent)
 
 	controlFrame ack(QByteArray(1, ACK));
 	controlFrame enq(QByteArray(1, ENQ));
-	
+
 	qDebug() << "dataframe full\n" << dataFrameFull.getFrame() << "\n";
 	qDebug() << "size: " << dataFrameFull.getFrame().size() << "\n";
 	qDebug() << "dataframe not full\n" << dataFrameNotFull.getFrame() << "\n";
@@ -36,7 +41,6 @@ noWires::noWires(QWidget *parent)
 
 inline void noWires::addButtons()
 {
-
 	connect(ui.actionSend, &QAction::triggered, this, &noWires::startSending);
 	connect(ui.actionOpen_File, &QAction::triggered, this, &noWires::openAFile);
 	ui.actionSend->setEnabled(false);
@@ -46,8 +50,9 @@ inline void noWires::addButtons()
 void noWires::startSending()
 {
 	//Start Protocol
+	connectPort();
 	statusBar()->showMessage(tr("Sending"));
-	
+		
 	char character;
 	while (true)
 	{
@@ -67,7 +72,6 @@ void noWires::startSending()
 		break;
 	}
 	inputFile.close();
-
 }
 
 //jc
@@ -77,7 +81,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 	{
 		//check CRC
 		QByteArray data;
-		QByteArray receivedCheckSum;
+		QByteArray receivedCRCFrame;
 
 		for (int i = 0; i < 512; i++)
 		{
@@ -85,13 +89,13 @@ void noWires::receivingFrame(QByteArray toReceive)
 		}
 		for (int i = 514; i < 516; i++)
 		{
-			receivedCheckSum.append(toReceive[i]);
+			receivedCRCFrame.append(toReceive[i]);
 		}
-		quint16 calculatedCheckSum = qChecksum(toReceive, 514);
-		QByteArray calculatedByteCheckSum;
-		calculatedByteCheckSum << calculatedCheckSum;
+		quint16 calculatedCRCInt = qChecksum(toReceive, 514);
+		QByteArray calculatedCRCFrame;
+		calculatedCRCFrame << calculatedCRCInt;
 		
-		if (*calculatedByteCheckSum == *receivedCheckSum)
+		if (*calculatedCRCFrame == *receivedCRCFrame)
 		{
 			textBox->putData(data);
 		}
@@ -153,6 +157,12 @@ void noWires::connectPort()
 
 	if (!serial->open(QIODevice::ReadWrite)) {
 		qDebug() << serial->errorString();
+		// i'd call handleException here but i dont have a ref to the exception variable
+		QMessageBox msgBox;
+		msgBox.setText("Serial Port did not open successfully");
+		msgBox.setInformativeText(serial->errorString());
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
 		return;
 	}
 	else
@@ -161,5 +171,30 @@ void noWires::connectPort()
 		qDebug() << serial->baudRate();
 		qDebug() << serial->portName();
 		connect(serial, &QSerialPort::readyRead, this, &noWires::readData);
+	}
+}
+
+/* Handles unexpected errors QSerialPort might throw.
+Does not check for or handle mistakes in data.  */
+void noWires::handleException(QSerialPort::SerialPortError e)
+{
+	if (e == QSerialPort::ResourceError) {
+		// same popup as in openPort
+		QMessageBox msgBox;
+		msgBox.setText("Serial Port did not open successfully");
+		msgBox.setInformativeText(serial->errorString());
+		msgBox.setDefaultButton(QMessageBox::Ok);
+		msgBox.exec();
+		closePort();
+	}
+}
+
+void noWires::closePort()
+{
+	// this if statment isnt actually needed, Qt handles closing null ports itself
+	// but makes logical sense to put here
+	if (serial->isOpen())
+	{
+		serial->close();
 	}
 }
