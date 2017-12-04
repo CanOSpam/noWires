@@ -32,6 +32,9 @@
     <Filter Include="uint Operators">
       <UniqueIdentifier>{c8d65618-5cbf-4431-bf56-260e120a40b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="textbox">
+      <UniqueIdentifier>{b4c87a71-c382-466a-8104-92127d59b36f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
@@ -58,6 +61,18 @@
     <ClCompile Include="frame.cpp">
       <Filter>Frames</Filter>
     </ClCompile>
+    <ClCompile Include="textBox.cpp">
+      <Filter>textbox</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_textBox.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_textBox.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="uintOperators.cpp">
+      <Filter>uint Operators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.ui">
@@ -68,6 +83,9 @@
     </CustomBuild>
     <CustomBuild Include="noWires.h">
       <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="textBox.h">
+      <Filter>textbox</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

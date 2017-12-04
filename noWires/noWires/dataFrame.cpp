@@ -1,5 +1,4 @@
 #include "dataFrame.h"
-#include "uintOperators.h"
 
 dataFrame::dataFrame(QByteArray data)
 	: frame(data)
@@ -23,16 +22,17 @@ QByteArray dataFrame::getFrame()
 		frame.append(mData);
 	}
 
-	frame.append(getCRC());
+	frame.append(getCRC(frame));
 	
 	return frame;
 }
 
-QByteArray dataFrame::getCRC()
+QByteArray dataFrame::getCRC(QByteArray data)
 {
 	QByteArray byteCheckSum;
 
-	quint16 checkSum = qChecksum(mData, mData.size());
+	quint16 checkSum = qChecksum(data, 514);
 	byteCheckSum << checkSum;
+
 	return byteCheckSum;
 }

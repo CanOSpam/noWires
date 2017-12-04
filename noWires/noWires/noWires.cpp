@@ -1,5 +1,6 @@
 #include "noWires.h"
 
+
 noWires::noWires(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -8,6 +9,9 @@ noWires::noWires(QWidget *parent)
 
 	addButtons();
 	serial =  &QSerialPort("COM1", this);
+	textBox = new TextBox;
+	setCentralWidget(textBox);
+	textBox->setLocalEchoEnabled(false);
 
 	
 	//connectPort();
@@ -38,6 +42,7 @@ inline void noWires::addButtons()
 	ui.actionSend->setEnabled(false);
 }
 
+//jc
 void noWires::startSending()
 {
 	//Start Protocol
@@ -58,15 +63,41 @@ void noWires::startSending()
 		dataFrame frame(data);
 		std::cout << frame.getFrame().toStdString();
 		//serial->write(frame.getFrame());
+		receivingFrame(frame.getFrame());
 		break;
 	}
 	inputFile.close();
 
 }
 
+//jc
 void noWires::receivingFrame(QByteArray toReceive)
 {
+	if ((toReceive[0] = SYN) & (toReceive[1] = STX))
+	{
+		//check CRC
+		QByteArray data;
+		QByteArray receivedCheckSum;
 
+		for (int i = 0; i < 512; i++)
+		{
+			data[i] = toReceive[i + 2];
+		}
+		for (int i = 514; i < 516; i++)
+		{
+			receivedCheckSum.append(toReceive[i]);
+		}
+		quint16 calculatedCheckSum = qChecksum(toReceive, 514);
+		QByteArray calculatedByteCheckSum;
+		calculatedByteCheckSum << calculatedCheckSum;
+		
+		if (*calculatedByteCheckSum == *receivedCheckSum)
+		{
+			textBox->putData(data);
+		}
+
+
+	}
 }
 
 void noWires::openAFile()

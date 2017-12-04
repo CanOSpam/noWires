@@ -13,6 +13,8 @@
 #include "ui_noWires.h"
 #include "controlFrame.h"
 #include "dataFrame.h"
+#include "textBox.h"
+
 
 #define ACK 0x06
 #define ENQ 0x05
@@ -32,6 +34,7 @@ private:
 	std::ifstream inputFile;
 	bool fileOpen;
 	QSerialPort *serial;
+	TextBox *textBox;
 
 	Ui::noWiresClass ui;
 	inline void addButtons();

@@ -1,6 +1,7 @@
 #pragma once
 #include <QByteArray>
 
+
 #define SYN 0x16
 #define STX 0x02
 
