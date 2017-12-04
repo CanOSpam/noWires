@@ -73,7 +73,7 @@ void noWires::startSending()
 //jc
 void noWires::receivingFrame(QByteArray toReceive)
 {
-	if ((toReceive[0] == (char)SYN) & (toReceive[1] = (char)STX))
+	if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
 	{
 		//check CRC
 		QByteArray data;
@@ -83,7 +83,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 		{
 			data[i] = toReceive[i + 2];
 		}
-		for (int i = 514; i < 516; i++)
+		for (int i = 514; i < 518; i++)
 		{
 			receivedCheckSum.append(toReceive[i]);
 		}
