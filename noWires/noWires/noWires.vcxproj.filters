@@ -40,17 +40,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_noWires.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\qrc_noWires.cpp">
       <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="noWires.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
@@ -76,6 +67,12 @@
     <ClCompile Include="uintOperators.cpp">
       <Filter>uint Operators</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ApplicationActivity.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ApplicationActivity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.ui">
@@ -84,11 +81,11 @@
     <CustomBuild Include="noWires.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="noWires.h">
-      <Filter>Core</Filter>
-    </CustomBuild>
     <CustomBuild Include="textBox.h">
       <Filter>textbox</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ApplicationActivity.h">
+      <Filter>Core</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

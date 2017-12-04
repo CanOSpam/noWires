@@ -1,7 +1,7 @@
-#include "noWires.h"
+#include "ApplicationActivity.h"
 
 
-noWires::noWires(QWidget *parent)
+ApplicationActivity::ApplicationActivity(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
@@ -14,11 +14,17 @@ noWires::noWires(QWidget *parent)
 	textBox->setLocalEchoEnabled(false);
 
 	//connectPort(); //dont call it here
-	demo_Frames();
 	//TESTING FRAMES DELETE IN RELEASE
-	
+	demo_Frames();
 }
-void noWires::demo_Frames()
+
+ApplicationActivity::~ApplicationActivity()
+{
+	closePort();
+	delete textBox;
+}
+
+void ApplicationActivity::demo_Frames()
 {
 	QByteArray full(512, 0x07);
 	QByteArray notFull(300, 0x07);
@@ -37,15 +43,15 @@ void noWires::demo_Frames()
 	qDebug() << "controlframe enq\n" << enq.getFrame() << "\n";
 }
 
-inline void noWires::addButtons()
+inline void ApplicationActivity::addButtons()
 {
-	connect(ui.actionSend, &QAction::triggered, this, &noWires::startSending);
-	connect(ui.actionOpen_File, &QAction::triggered, this, &noWires::openAFile);
+	connect(ui.actionSend, &QAction::triggered, this, &ApplicationActivity::startSending);
+	connect(ui.actionOpen_File, &QAction::triggered, this, &ApplicationActivity::openAFile);
 	ui.actionSend->setEnabled(false);
 }
 
 //jc
-void noWires::startSending()
+void ApplicationActivity::startSending()
 {
 	//Start Protocol
 	connectPort();
@@ -73,7 +79,7 @@ void noWires::startSending()
 }
 
 //jc
-void noWires::receivingFrame(QByteArray toReceive)
+void ApplicationActivity::receivingFrame(QByteArray toReceive)
 {
 	if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
 	{
@@ -104,7 +110,7 @@ void noWires::receivingFrame(QByteArray toReceive)
 	}
 }
 
-void noWires::openAFile()
+void ApplicationActivity::openAFile()
 {
 	fileName = QFileDialog::getOpenFileName(this,
 		tr("Choose File to Send"), "./", tr("Text File (*.txt)"));
@@ -123,7 +129,7 @@ void noWires::openAFile()
 }
 
 
-void noWires::readData()
+void ApplicationActivity::readData()
 {
 	QByteArray data = serial->readAll();
 
@@ -135,18 +141,18 @@ void noWires::readData()
 	}
 }
 
-void noWires::getControlToSend()
+void ApplicationActivity::getControlToSend()
 {
 	controlFrame enq(QByteArray(1, ENQ));
 	serial->write(enq.getFrame());
 }
 
-void noWires::sendData(QByteArray toSend)
+void ApplicationActivity::sendData(QByteArray toSend)
 {
 	serial->write(toSend);
 }
 
-void noWires::connectPort()
+void ApplicationActivity::connectPort()
 {
 	//Set defaults
 	serial->setBaudRate(QSerialPort::Baud9600);
@@ -170,13 +176,13 @@ void noWires::connectPort()
 		qDebug() << serial->isOpen();
 		qDebug() << serial->baudRate();
 		qDebug() << serial->portName();
-		connect(serial, &QSerialPort::readyRead, this, &noWires::readData);
+		connect(serial, &QSerialPort::readyRead, this, &ApplicationActivity::readData);
 	}
 }
 
 /* Handles unexpected errors QSerialPort might throw.
 Does not check for or handle mistakes in data.  */
-void noWires::handleException(QSerialPort::SerialPortError e)
+void ApplicationActivity::handleException(QSerialPort::SerialPortError e)
 {
 	if (e == QSerialPort::ResourceError) {
 		// same popup as in openPort
@@ -189,7 +195,7 @@ void noWires::handleException(QSerialPort::SerialPortError e)
 	}
 }
 
-void noWires::closePort()
+void ApplicationActivity::closePort()
 {
 	// this if statment isnt actually needed, Qt handles closing null ports itself
 	// but makes logical sense to put here

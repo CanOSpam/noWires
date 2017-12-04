@@ -72,7 +72,7 @@
     <ClCompile Include="controlFrame.cpp" />
     <ClCompile Include="dataFrame.cpp" />
     <ClCompile Include="frame.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_ApplicationActivity.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_textBox.cpp">
@@ -84,19 +84,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_noWires.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_textBox.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="noWires.cpp" />
+    <ClCompile Include="ApplicationActivity.cpp" />
     <ClCompile Include="textBox.cpp" />
     <ClCompile Include="uintOperators.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="noWires.h">
+    <CustomBuild Include="ApplicationActivity.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Moc%27ing noWires.h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>

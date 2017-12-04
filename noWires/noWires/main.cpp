@@ -1,10 +1,10 @@
-#include "noWires.h"
+#include "ApplicationActivity.h"
 #include <QtWidgets/QApplication>
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
-	noWires w;
-	w.show();
+	ApplicationActivity aa;
+	aa.show();
 	return a.exec();
 }

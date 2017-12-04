@@ -23,12 +23,13 @@
 #define SYN 0x16
 
 
-class noWires : public QMainWindow
+class ApplicationActivity : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	noWires(QWidget *parent = Q_NULLPTR);
+	ApplicationActivity(QWidget *parent = Q_NULLPTR);
+	virtual ~ApplicationActivity();
 
 private:
 
@@ -38,7 +39,7 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 
-	Ui::noWiresClass ui;
+	Ui::mainWindow ui;
 	inline void addButtons();
 	void startSending();
 	void openAFile();

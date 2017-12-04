@@ -22,7 +22,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_noWiresClass
+class Ui_mainWindow
 {
 public:
     QAction *actionOpen_File;
@@ -32,51 +32,51 @@ public:
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
-    void setupUi(QMainWindow *noWiresClass)
+    void setupUi(QMainWindow *mainWindow)
     {
-        if (noWiresClass->objectName().isEmpty())
-            noWiresClass->setObjectName(QStringLiteral("noWiresClass"));
-        noWiresClass->resize(600, 400);
-        actionOpen_File = new QAction(noWiresClass);
+        if (mainWindow->objectName().isEmpty())
+            mainWindow->setObjectName(QStringLiteral("mainWindow"));
+        mainWindow->resize(600, 400);
+        actionOpen_File = new QAction(mainWindow);
         actionOpen_File->setObjectName(QStringLiteral("actionOpen_File"));
-        actionSend = new QAction(noWiresClass);
+        actionSend = new QAction(mainWindow);
         actionSend->setObjectName(QStringLiteral("actionSend"));
-        centralWidget = new QWidget(noWiresClass);
+        centralWidget = new QWidget(mainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        noWiresClass->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(noWiresClass);
+        mainWindow->setCentralWidget(centralWidget);
+        menuBar = new QMenuBar(mainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 600, 21));
-        noWiresClass->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(noWiresClass);
+        mainWindow->setMenuBar(menuBar);
+        mainToolBar = new QToolBar(mainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
-        noWiresClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
-        statusBar = new QStatusBar(noWiresClass);
+        mainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
+        statusBar = new QStatusBar(mainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
-        noWiresClass->setStatusBar(statusBar);
+        mainWindow->setStatusBar(statusBar);
 
         mainToolBar->addAction(actionOpen_File);
         mainToolBar->addAction(actionSend);
 
-        retranslateUi(noWiresClass);
+        retranslateUi(mainWindow);
 
-        QMetaObject::connectSlotsByName(noWiresClass);
+        QMetaObject::connectSlotsByName(mainWindow);
     } // setupUi
 
-    void retranslateUi(QMainWindow *noWiresClass)
+    void retranslateUi(QMainWindow *mainWindow)
     {
-        noWiresClass->setWindowTitle(QApplication::translate("noWiresClass", "noWires", Q_NULLPTR));
-        actionOpen_File->setText(QApplication::translate("noWiresClass", "Open File", Q_NULLPTR));
+        mainWindow->setWindowTitle(QApplication::translate("mainWindow", "noWires", Q_NULLPTR));
+        actionOpen_File->setText(QApplication::translate("mainWindow", "Open File", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        actionOpen_File->setToolTip(QApplication::translate("noWiresClass", "Choose a file to open", Q_NULLPTR));
+        actionOpen_File->setToolTip(QApplication::translate("mainWindow", "Choose a file to open", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        actionSend->setText(QApplication::translate("noWiresClass", "Send", Q_NULLPTR));
+        actionSend->setText(QApplication::translate("mainWindow", "Send", Q_NULLPTR));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class noWiresClass: public Ui_noWiresClass {};
+    class mainWindow: public Ui_mainWindow {};
 } // namespace Ui
 
 QT_END_NAMESPACE
