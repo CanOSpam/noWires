@@ -6,6 +6,7 @@
 #include <QDesktopservices>
 #include <QDebug>
 #include <QSerialPort>
+#include <QInputDialog>
 #include <QMessageBox>
 
 #include <iostream>
@@ -46,7 +47,6 @@ private:
 	void sendData(QByteArray toSend);
 	void connectPort();
 	void getControlToSend();
-	void receivingFrame(QByteArray toReceive);
 	void closePort();
 	void handleException(QSerialPort::SerialPortError e);
 	void demo_Frames();

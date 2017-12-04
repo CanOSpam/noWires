@@ -73,6 +73,12 @@
     <ClCompile Include="ApplicationActivity.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="SendActivity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiveActivity.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.ui">
@@ -106,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="CRCpp.h">
       <Filter>CRCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="SendActivity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiveActivity.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -89,6 +89,8 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ApplicationActivity.cpp" />
+    <ClCompile Include="ReceiveActivity.cpp" />
+    <ClCompile Include="SendActivity.cpp" />
     <ClCompile Include="textBox.cpp" />
     <ClCompile Include="uintOperators.cpp" />
   </ItemGroup>
@@ -132,6 +134,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DUNICODE -DWIN32 -DWIN64 -DQT_NO_DEBUG -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_SERIALPORT_LIB -DQT_WIDGETS_LIB "-I.\GeneratedFiles" "-I." "-I$(QTDIR)\include" "-I.\GeneratedFiles\$(ConfigurationName)\." "-I$(QTDIR)\include\QtCore" "-I$(QTDIR)\include\QtGui" "-I$(QTDIR)\include\QtSerialPort" "-I$(QTDIR)\include\QtWidgets"</Command>
     </CustomBuild>
+    <ClInclude Include="ReceiveActivity.h" />
+    <ClInclude Include="SendActivity.h" />
     <ClInclude Include="uintOperators.h" />
   </ItemGroup>
   <ItemGroup>
