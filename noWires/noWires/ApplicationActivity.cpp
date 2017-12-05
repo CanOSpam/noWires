@@ -1,6 +1,5 @@
 #include "ApplicationActivity.h"
 
-
 ApplicationActivity::ApplicationActivity(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -16,7 +15,7 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
 	textBox->setLocalEchoEnabled(false);
 
 	bool ok;
-	QString comPort = QInputDialog::getText(this, tr("Com picker"),
+	comPort = QInputDialog::getText(this, tr("Com picker"),
  		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
  	//serial port not usable until opened
  	serial = new QSerialPort(comPort, this); 
@@ -94,7 +93,7 @@ bool ApplicationActivity::bidForLine()
 void ApplicationActivity::connectPort()
 {
 	//Set defaults
-	serial->setPortName("COM1");
+	serial->setPortName(comPort);
 	serial->setBaudRate(QSerialPort::Baud9600);
 	serial->setDataBits(QSerialPort::Data8);
 	serial->setParity(QSerialPort::NoParity);
@@ -104,8 +103,7 @@ void ApplicationActivity::connectPort()
 	if (!serial->open(QIODevice::ReadWrite))
 	{
 		qDebug() << serial->errorString();
-		// i'd call handleException here but i dont have a ref to the exception variable
-		handlePortExceptions(serial->error());//QSerialPort::SerialPortError);
+		handlePortExceptions(serial->error()); // serial->error() : QSerialPort::SerialPortError 
 		return;
 	}
 	else
@@ -115,9 +113,11 @@ void ApplicationActivity::connectPort()
 		qDebug() << serial->portName();
 		//RX all
 		connect(serial, &QSerialPort::readyRead, this, &ApplicationActivity::readData);
+		connect(textBox, &TextBox::getData, this, &ApplicationActivity::startSending);
 	}
 }
-//ax
+
+//vetoed as usual
 int timer()
 {
 	std::clock_t timer;
@@ -126,7 +126,7 @@ int timer()
 	return duration;
 }
 
-//jc 
+//orig startSending
 void ApplicationActivity::fileToSend()
 {
 	//Start Protocol
@@ -160,14 +160,14 @@ void ApplicationActivity::fileToSend()
 
 void ApplicationActivity::readData()
 {
+
 	QByteArray toReceive = serial->readAll();
 
 	//enq
 	if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)ENQ))
 	{
-		bReceivedENQ = true;
 		controlFrame ack(QByteArray(1, ACK));
-		sendData(ack.getFrame());
+		serial->write(ack.getFrame());
 	}
 	//ack
 	if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)ACK))
@@ -175,32 +175,34 @@ void ApplicationActivity::readData()
 		bReceivedACK = true;
 	}
 	//data
-  	else if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
-  	{
-  		//check CRC
-  		QByteArray data;
-  		QByteArray receivedCheckSum;
-  
-  		for (int i = 0; i < 512; i++)
-  		{
-  			data[i] = toReceive[i + 2];
-  		}
-  		for (int i = 514; i < 518; i++)
-  		{
-  			receivedCheckSum.append(toReceive[i]);
-  		}
-  
-  		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
-  
-  		QByteArray calculatedByteCheckSum;
-  		calculatedByteCheckSum << crc;
-  
-  		if (calculatedByteCheckSum == receivedCheckSum)
-  		{
-  			textBox->putData(data);
-  		}
-  
-  
+	else if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)STX))
+	{
+		//check CRC
+		QByteArray data;
+		QByteArray receivedCRCBytes; //orig receivedCheckSum
+
+		for (int i = 0; i < 512; i++)
+		{
+			data[i] = toReceive[i + 2];
+		}
+		for (int i = 514; i < 518; i++)
+		{
+			receivedCRCFrame.append(toReceive[i]);
+		}
+		std::cout << "data size" << data.size() << std::endl;
+
+		quint32 CRCInt = CRC::Calculate(data, 512, CRC::CRC_32()); //orig crc
+
+		QByteArray calculatedCRCBytes; //orig calculatedByteCheckSum
+		calculatedCRCBytes << CRCInt;
+		
+		//if (calculatedByteCheckSum == receivedCheckSum)
+		//{
+			textBox->putData(data);
+			controlFrame ack(QByteArray(1, ACK));
+			serial->write(ack.getFrame());
+		//}
+
   	}
 }
 

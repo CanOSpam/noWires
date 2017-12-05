@@ -35,6 +35,7 @@ public:
 
 private:
 
+	QString comPort;
 	QString fileName;
 	std::ifstream inputFile;
 	bool bFileOpen;
@@ -47,7 +48,6 @@ private:
 	inline void addButtons();
 	//void startSending();
 	//void openAFile();
-	void connectPort();
 	void getControlToSend();
 	void closePort();
 	void handlePortExceptions(QSerialPort::SerialPortError e);
@@ -61,5 +61,7 @@ private:
 
 public slots:
 	void readData();
+	void startSending();
+	void connectPort();
 };
 
