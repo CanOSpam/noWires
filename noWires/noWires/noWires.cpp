@@ -122,7 +122,7 @@ void noWires::readData()
 			toRead.remove(0, 2);
 			data.append(toRead, 512);
 			toRead.remove(0, 512);
-			data.append(toRead, 4);
+			receivedCheckSum.append(toRead, 4);
 
 			qDebug() << "DATA SIZE: " << data.size();
 			qDebug() << "DATA: " << data;
@@ -132,7 +132,8 @@ void noWires::readData()
 			QByteArray calculatedByteCheckSum;
 			calculatedByteCheckSum << crc;
 
-			data.remove(512, 4);
+			qDebug() << "RECE CHECKSUM: " << receivedCheckSum;
+			qDebug() << "CALC CHECKSUM: " << calculatedByteCheckSum;
 
 			if (calculatedByteCheckSum == receivedCheckSum)
 			{
