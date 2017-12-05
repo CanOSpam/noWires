@@ -20,23 +20,6 @@ noWires::noWires(QWidget *parent)
 
 
 	connectPort();
-
-	//TESTING FRAMES DELETE IN RELEASE
-	QByteArray full(512, 0x07);
-	QByteArray notFull(300, 0x07);
-
-	dataFrame dataFrameFull(full);
-	dataFrame dataFrameNotFull(notFull);
-
-	controlFrame ack(QByteArray(1, ACK));
-	controlFrame enq(QByteArray(1, ENQ));
-
-	qDebug() << "dataframe full\n" << dataFrameFull.getFrame() << "\n";
-	qDebug() << "size: " << dataFrameFull.getFrame().size() << "\n";
-	qDebug() << "dataframe not full\n" << dataFrameNotFull.getFrame() << "\n";
-	qDebug() << "size: " << dataFrameNotFull.getFrame().size() << "\n";
-	qDebug() << "controlframe ack\n" << ack.getFrame() << "\n";
-	qDebug() << "controlframe enq\n" << enq.getFrame() << "\n";
 }
 
 inline void noWires::addButtons()
@@ -103,20 +86,16 @@ void noWires::readData()
 	{
 		//ACK
 		buffer.remove(0, 2);
-		controlFrame ack(QByteArray(1, ACK));
-		serial->write(ack.getFrame());
+		sendACK();
 	}
 	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
 	{
 		if (buffer.size() >= 518)
 		{
 			//Data
-			//check CRC
 			QByteArray toRead(buffer, 518);
 			buffer.remove(0, 518);
-			qDebug() << "BUFFER: " << buffer;
 			QByteArray data;
-			qDebug() << "TOREAD: " << toRead;
 			QByteArray receivedCheckSum;
 
 			toRead.remove(0, 2);
@@ -127,19 +106,19 @@ void noWires::readData()
 			qDebug() << "DATA SIZE: " << data.size();
 			qDebug() << "DATA: " << data;
 
+			//calculate and check CRC
 			quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
 
 			QByteArray calculatedByteCheckSum;
 			calculatedByteCheckSum << crc;
 
-			qDebug() << "RECE CHECKSUM: " << receivedCheckSum;
-			qDebug() << "CALC CHECKSUM: " << calculatedByteCheckSum;
+			qDebug() << "RECE CRC: " << receivedCheckSum;
+			qDebug() << "CALC CRC: " << calculatedByteCheckSum;
 
 			if (calculatedByteCheckSum == receivedCheckSum)
 			{
 				textBox->putData(data);
-				controlFrame ack(QByteArray(1, ACK));
-				serial->write(ack.getFrame());
+				sendACK();
 			}
 			toRead.clear();
 		}
@@ -149,10 +128,16 @@ void noWires::readData()
 
 }
 
-void noWires::getControlToSend()
+void noWires::sendENQ()
 {
 	controlFrame enq(QByteArray(1, ENQ));
 	serial->write(enq.getFrame());
+}
+
+void noWires::sendACK()
+{
+	controlFrame ack(QByteArray(1, ACK));
+	serial->write(ack.getFrame());
 }
 
 void noWires::sendData(QByteArray toSend)

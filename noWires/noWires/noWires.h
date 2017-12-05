@@ -43,7 +43,9 @@ private:
 	inline void addButtons();
 	void openAFile();
 	void sendData(QByteArray toSend);
-	void getControlToSend();
+	void sendENQ();
+
+	void sendACK();
 
 
 
