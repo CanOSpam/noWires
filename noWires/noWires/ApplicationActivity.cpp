@@ -19,34 +19,13 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
  		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
  	//serial port not usable until opened
  	serial = new QSerialPort(comPort, this); 
-	//connectPort(); //dont call it here
-	//TESTING FRAMES DELETE IN RELEASE
-	// demo_Frames();
+	connectPort(); //dont call it here
 }
 
 ApplicationActivity::~ApplicationActivity()
 {
 	closePort();
 	delete textBox;
-}
-
-void ApplicationActivity::demo_Frames()
-{
-	QByteArray full(512, 0x07);
-	QByteArray notFull(300, 0x07);
-
-	dataFrame dataFrameFull(full);
-	dataFrame dataFrameNotFull(notFull);
-
-	controlFrame ack(QByteArray(1, ACK));
-	controlFrame enq(QByteArray(1, ENQ));
-
-	qDebug() << "dataframe full\n" << dataFrameFull.getFrame() << "\n";
-	qDebug() << "size: " << dataFrameFull.getFrame().size() << "\n";
-	qDebug() << "dataframe not full\n" << dataFrameNotFull.getFrame() << "\n";
-	qDebug() << "size: " << dataFrameNotFull.getFrame().size() << "\n";
-	qDebug() << "controlframe ack\n" << ack.getFrame() << "\n";
-	qDebug() << "controlframe enq\n" << enq.getFrame() << "\n";
 }
 
 inline void ApplicationActivity::addButtons()
@@ -93,6 +72,10 @@ bool ApplicationActivity::bidForLine()
 void ApplicationActivity::connectPort()
 {
 	//Set defaults
+	if (comPort == "")
+	{
+		comPort = "COM1";
+	}
 	serial->setPortName(comPort);
 	serial->setBaudRate(QSerialPort::Baud9600);
 	serial->setDataBits(QSerialPort::Data8);
@@ -113,7 +96,7 @@ void ApplicationActivity::connectPort()
 		qDebug() << serial->portName();
 		//RX all
 		connect(serial, &QSerialPort::readyRead, this, &ApplicationActivity::readData);
-		connect(textBox, &TextBox::getData, this, &ApplicationActivity::startSending);
+		connect(textBox, &TextBox::getData, this, &ApplicationActivity::fileToSend);
 	}
 }
 
@@ -130,14 +113,13 @@ int timer()
 void ApplicationActivity::fileToSend()
 {
 	//Start Protocol
-	connectPort();
 	statusBar()->showMessage(tr("Sending"));
-	if (!bidForLine())
+	/*if (!bidForLine())
 	{
 		qDebug() << "Bidding failed. Did not receive ACK in time" << "\n";
 		closePort();
 		return;
-	}
+	}*/
 	char character;
 	while (true)
 	{
@@ -161,48 +143,57 @@ void ApplicationActivity::fileToSend()
 void ApplicationActivity::readData()
 {
 
-	QByteArray toReceive = serial->readAll();
+	buffer.append(serial->readAll());
 
 	//enq
-	if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)ENQ))
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
 	{
-		controlFrame ack(QByteArray(1, ACK));
-		serial->write(ack.getFrame());
+		buffer.remove(0, 2);
+		sendACK();
 	}
 	//ack
-	if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)ACK))
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
 	{
+		
 		bReceivedACK = true;
 	}
 	//data
-	else if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)STX))
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
 	{
-		//check CRC
-		QByteArray data;
-		QByteArray receivedCRCBytes; //orig receivedCheckSum
-
-		for (int i = 0; i < 512; i++)
+		if (buffer.size() >= 518)
 		{
-			data[i] = toReceive[i + 2];
+			qDebug() << "FRAME SIZE: " << buffer.count();
+			std::cout << "FRAME : " << buffer.toStdString() << "\n";
+			//Data
+			//check CRC
+			QByteArray toRead(buffer, 518);
+			buffer.remove(0, 518);
+			QByteArray data;
+			QByteArray receivedCheckSum;
+
+			//discard header, ie rip ticket on admission
+			toRead.remove(0, 2);
+			data.append(toRead, 512);
+			toRead.remove(0, 512);
+			receivedCheckSum.append(toRead, 4);
+
+			qDebug() << "DATA SIZE: " << data.size();
+			std::cout << "DATA: " << data.toStdString();
+
+			quint32 CRCInt = CRC::Calculate(data, 512, CRC::CRC_32()); //orig crc
+			QByteArray calculatedCRCBytes; //orig calculatedByteCheckSum
+			calculatedCRCBytes << CRCInt;
+			
+			qDebug() << "\nRECE CRC: " << receivedCheckSum;
+			qDebug() << "CALC CRC: " << calculatedCRCBytes;
+			if (calculatedCRCBytes == receivedCheckSum)
+			{
+				textBox->putData(data);
+				controlFrame ack(QByteArray(1, ACK));
+				serial->write(ack.getFrame());
+			}
+			toRead.clear();
 		}
-		for (int i = 514; i < 518; i++)
-		{
-			receivedCRCFrame.append(toReceive[i]);
-		}
-		std::cout << "data size" << data.size() << std::endl;
-
-		quint32 CRCInt = CRC::Calculate(data, 512, CRC::CRC_32()); //orig crc
-
-		QByteArray calculatedCRCBytes; //orig calculatedByteCheckSum
-		calculatedCRCBytes << CRCInt;
-		
-		//if (calculatedByteCheckSum == receivedCheckSum)
-		//{
-			textBox->putData(data);
-			controlFrame ack(QByteArray(1, ACK));
-			serial->write(ack.getFrame());
-		//}
-
   	}
 }
 
@@ -212,12 +203,18 @@ void ApplicationActivity::getControlToSend()
 	sendData(enq.getFrame());
 }
 
+void ApplicationActivity::sendACK()
+{
+	controlFrame ack(QByteArray(1, ACK));
+	sendData(ack.getFrame());
+}
 
 void ApplicationActivity::sendData(QByteArray toSend)
 {
 	if (serial->isOpen())
 	{
 		serial->write(toSend);
+		serial->flush();
 	}
 } 
 

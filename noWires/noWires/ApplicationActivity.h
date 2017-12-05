@@ -43,6 +43,7 @@ private:
 	bool bReceivedACK;
 	QSerialPort *serial;
 	TextBox *textBox;
+	QByteArray buffer;
 
 	Ui::mainWindow ui;
 	inline void addButtons();
@@ -52,16 +53,15 @@ private:
 	void closePort();
 	void handlePortExceptions(QSerialPort::SerialPortError e);
 	void sendData(QByteArray toSend);
-	void fileToSend();
 	void prepareToSend();
 	bool bidForLine();
 	void filePicker();
 
-	void demo_Frames();
+	void sendACK();
 
 public slots:
 	void readData();
-	void startSending();
+	void fileToSend(); //orig startSending();
 	void connectPort();
 };
 
