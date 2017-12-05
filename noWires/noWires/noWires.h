@@ -37,6 +37,7 @@ private:
 	bool fileOpen;
 	QSerialPort *serial;
 	TextBox *textBox;
+	QByteArray buffer;
 
 	Ui::noWiresClass ui;
 	inline void addButtons();
