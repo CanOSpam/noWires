@@ -31,7 +31,7 @@ public:
 	noWires(QWidget *parent = Q_NULLPTR);
 
 private:
-
+	QString comPort;
 	QString fileName;
 	std::ifstream inputFile;
 	bool fileOpen;
@@ -40,15 +40,16 @@ private:
 
 	Ui::noWiresClass ui;
 	inline void addButtons();
-	void startSending();
 	void openAFile();
 	void sendData(QByteArray toSend);
-	void connectPort();
 	void getControlToSend();
 
 
 
 public slots:
 	void readData();
+	void startSending();
+	void connectPort();
+
 };
 

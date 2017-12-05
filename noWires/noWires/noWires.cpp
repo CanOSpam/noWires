@@ -10,7 +10,7 @@ noWires::noWires(QWidget *parent)
 	addButtons();
 
 	bool ok;
-	QString comPort = QInputDialog::getText(this, tr("Com picker"),
+	comPort = QInputDialog::getText(this, tr("Com picker"),
 		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
 
 	serial =  new QSerialPort(comPort, this);
@@ -69,6 +69,7 @@ void noWires::startSending()
 		std::cout << frame.getFrame().toStdString();
 		serial->write(frame.getFrame());
 		break;
+
 	}
 	inputFile.close();
 
@@ -104,7 +105,7 @@ void noWires::readData()
 		serial->write(ack.getFrame());
 	}
 	//data
-	else if ((toReceive[0] == (char)SYN) & (toReceive[1] == (char)STX))
+	else if ((toReceive[0] == (char)SYN) && (toReceive[1] == (char)STX))
 	{
 		//check CRC
 		QByteArray data;
@@ -118,16 +119,19 @@ void noWires::readData()
 		{
 			receivedCheckSum.append(toReceive[i]);
 		}
+		std::cout << "data size" << data.size() << std::endl;
 
 		quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
 
 		QByteArray calculatedByteCheckSum;
 		calculatedByteCheckSum << crc;
-
-		if (calculatedByteCheckSum == receivedCheckSum)
-		{
+		
+		//if (calculatedByteCheckSum == receivedCheckSum)
+		//{
 			textBox->putData(data);
-		}
+			controlFrame ack(QByteArray(1, ACK));
+			serial->write(ack.getFrame());
+		//}
 
 
 	}
@@ -147,7 +151,7 @@ void noWires::sendData(QByteArray toSend)
 void noWires::connectPort()
 {
 	//Set defaults
-	serial->setPortName("COM1");
+	serial->setPortName(comPort);
 	serial->setBaudRate(QSerialPort::Baud9600);
 	serial->setDataBits(QSerialPort::Data8);
 	serial->setParity(QSerialPort::NoParity);
@@ -165,5 +169,7 @@ void noWires::connectPort()
 		qDebug() << serial->baudRate();
 		qDebug() << serial->portName();
 		connect(serial, &QSerialPort::readyRead, this, &noWires::readData);
+		connect(textBox, &TextBox::getData, this, &noWires::startSending);
+
 	}
 }

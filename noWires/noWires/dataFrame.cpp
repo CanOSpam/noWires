@@ -3,7 +3,7 @@
 
 dataFrame::dataFrame(QByteArray data)
 	: frame(data)
-{
+
 }
 
 QByteArray dataFrame::getFrame()
