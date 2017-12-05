@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <fstream> 
+#include <ctime>
 
 #include "ui_noWires.h"
 #include "controlFrame.h"
@@ -36,21 +37,27 @@ private:
 
 	QString fileName;
 	std::ifstream inputFile;
-	bool fileOpen;
+	bool bFileOpen;
+	bool bReceivedENQ;
+	bool bReceivedACK;
 	QSerialPort *serial;
 	TextBox *textBox;
 
 	Ui::mainWindow ui;
 	inline void addButtons();
-	void startSending();
-	void openAFile();
-	void sendData(QByteArray toSend);
+	//void startSending();
+	//void openAFile();
 	void connectPort();
 	void getControlToSend();
 	void closePort();
-	void handleException(QSerialPort::SerialPortError e);
-	void demo_Frames();
+	void handlePortExceptions(QSerialPort::SerialPortError e);
+	void sendData(QByteArray toSend);
+	void fileToSend();
+	void prepareToSend();
+	bool bidForLine();
+	void filePicker();
 
+	void demo_Frames();
 
 public slots:
 	void readData();
