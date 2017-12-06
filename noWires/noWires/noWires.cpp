@@ -1,6 +1,26 @@
 #include "noWires.h"
 
-
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: noWires.cpp
+--
+-- PROGRAM: noWries
+--
+-- FUNCTIONS:
+-- PUT FUNCTION ONCE FINALIZED
+--
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNERS: Tim Bruecker, JC Tee, Keir Forster, Alex Xia
+--
+-- PROGRAMMERS: Tim Bruecker, JC Tee, Keir Forster, Alex Xia
+--
+-- NOTES:
+-- This is the core class that runs the main window and executes most of the logic of the application. The protocol 
+-- decision structure and all the serial port and file handling happens in this file.
+----------------------------------------------------------------------------------------------------------------------*/
 noWires::noWires(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -28,6 +48,25 @@ noWires::noWires(QWidget *parent)
 	connectPort();
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addButtons
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void addButtons()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function connects all the UI buttons to appropriate functions and disables the start sending button, as you can't
+-- send before you have a file.
+----------------------------------------------------------------------------------------------------------------------*/
 inline void noWires::addButtons()
 {
 
@@ -37,7 +76,6 @@ inline void noWires::addButtons()
 	ui.actionSend->setEnabled(false);
 }
 
-//jc
 void noWires::startSending()
 {
 	//Start Protocol
@@ -66,6 +104,24 @@ void noWires::startSending()
 	monitor->incrementTXFrames();
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: openAFile
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void openAFile()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function uses a QFileDialog to get a filename from the user, then uses that filename to open a file stream.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::openAFile()
 {
 	fileName = QFileDialog::getOpenFileName(this,
@@ -143,29 +199,120 @@ void noWires::readData()
 
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendENQ
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendENQ()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an ENQ and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::sendENQ()
 {
 	controlFrame enq(QByteArray(1, ENQ));
 	serial->write(enq.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendACK
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendACK()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an ACK and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
 	serial->write(ack.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendRVI
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendRVI()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an RVI and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::sendRVI()
 {
 	controlFrame ack(QByteArray(1, RVI));
 	serial->write(ack.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendData
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendData(QByteArray toSend)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This writes the QByteArray passed to it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::sendData(QByteArray toSend)
 {
 	serial->write(toSend);
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: connectPort
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void connectPort()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This passes the port name supplied by the user and sets the port name to the required settings to work with the 
+-- wireless modem. Then writes an error message or some basic data for the port to the console.
+----------------------------------------------------------------------------------------------------------------------*/
 void noWires::connectPort()
 {
 	//Set defaults

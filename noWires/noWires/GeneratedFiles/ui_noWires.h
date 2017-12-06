@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'noWires.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.3
+** Created by: Qt User Interface Compiler version 5.6.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -69,20 +69,16 @@ public:
 
     void retranslateUi(QMainWindow *noWiresClass)
     {
-        noWiresClass->setWindowTitle(QApplication::translate("noWiresClass", "noWires", Q_NULLPTR));
-        actionOpen_File->setText(QApplication::translate("noWiresClass", "Open File", Q_NULLPTR));
+        noWiresClass->setWindowTitle(QApplication::translate("noWiresClass", "noWires", 0));
+        actionOpen_File->setText(QApplication::translate("noWiresClass", "Open File", 0));
 #ifndef QT_NO_TOOLTIP
-        actionOpen_File->setToolTip(QApplication::translate("noWiresClass", "Choose a file to open", Q_NULLPTR));
+        actionOpen_File->setToolTip(QApplication::translate("noWiresClass", "Choose a file to open", 0));
 #endif // QT_NO_TOOLTIP
-<<<<<<< HEAD
         actionSend->setText(QApplication::translate("noWiresClass", "Send", 0));
         actionRVI->setText(QApplication::translate("noWiresClass", "RVI", 0));
 #ifndef QT_NO_TOOLTIP
         actionRVI->setToolTip(QApplication::translate("noWiresClass", "Send an RVI", 0));
 #endif // QT_NO_TOOLTIP
-=======
-        actionSend->setText(QApplication::translate("noWiresClass", "Send", Q_NULLPTR));
->>>>>>> 94e971d5aef3257c1a79f0fd2c8e2481c0e08fc1
     } // retranslateUi
 
 };
