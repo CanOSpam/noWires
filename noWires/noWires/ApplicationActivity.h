@@ -24,6 +24,10 @@
 #define ENQ 0x05
 #define SYN 0x16
 
+namespace Ui 
+{
+	class ui;
+};
 
 class ApplicationActivity : public QMainWindow
 {
@@ -63,5 +67,6 @@ public slots:
 	void readData();
 	void fileToSend(); //orig startSending();
 	void connectPort();
+	void disconnectPort();
 };
 

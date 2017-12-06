@@ -27,6 +27,8 @@ class Ui_mainWindow
 public:
     QAction *actionOpen_File;
     QAction *actionSend;
+    QAction *actionConnect;
+    QAction *actionDisconnect;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -41,6 +43,10 @@ public:
         actionOpen_File->setObjectName(QStringLiteral("actionOpen_File"));
         actionSend = new QAction(mainWindow);
         actionSend->setObjectName(QStringLiteral("actionSend"));
+        actionConnect = new QAction(mainWindow);
+        actionConnect->setObjectName(QStringLiteral("actionConnect"));
+        actionDisconnect = new QAction(mainWindow);
+        actionDisconnect->setObjectName(QStringLiteral("actionDisconnect"));
         centralWidget = new QWidget(mainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         mainWindow->setCentralWidget(centralWidget);
@@ -57,6 +63,8 @@ public:
 
         mainToolBar->addAction(actionOpen_File);
         mainToolBar->addAction(actionSend);
+        mainToolBar->addAction(actionConnect);
+        mainToolBar->addAction(actionDisconnect);
 
         retranslateUi(mainWindow);
 
@@ -71,6 +79,14 @@ public:
         actionOpen_File->setToolTip(QApplication::translate("mainWindow", "Choose a file to open", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
         actionSend->setText(QApplication::translate("mainWindow", "Send", Q_NULLPTR));
+        actionConnect->setText(QApplication::translate("mainWindow", "Connect", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionConnect->setToolTip(QApplication::translate("mainWindow", "Connect to a serial port", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        actionDisconnect->setText(QApplication::translate("mainWindow", "Disconnect", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionDisconnect->setToolTip(QApplication::translate("mainWindow", "Disconnect from serial port", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
     } // retranslateUi
 
 };

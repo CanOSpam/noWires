@@ -33,6 +33,8 @@
    </attribute>
    <addaction name="actionOpen_File"/>
    <addaction name="actionSend"/>
+   <addaction name="actionConnect"/>
+   <addaction name="actionDisconnect"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen_File">
@@ -46,6 +48,22 @@
   <action name="actionSend">
    <property name="text">
     <string>Send</string>
+   </property>
+  </action>
+  <action name="actionConnect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect to a serial port</string>
+   </property>
+  </action>
+  <action name="actionDisconnect">
+   <property name="text">
+    <string>Disconnect</string>
+   </property>
+   <property name="toolTip">
+    <string>Disconnect from serial port</string>
    </property>
   </action>
  </widget>

@@ -14,12 +14,9 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
 
-	bool ok;
-	comPort = QInputDialog::getText(this, tr("Com picker"),
- 		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
  	//serial port not usable until opened
  	serial = new QSerialPort(comPort, this); 
-	connectPort(); //dont call it here
+	//connectPort(); //dont call it here
 }
 
 ApplicationActivity::~ApplicationActivity()
@@ -32,7 +29,11 @@ inline void ApplicationActivity::addButtons()
 {
 	connect(ui.actionSend, &QAction::triggered, this, &ApplicationActivity::fileToSend);
 	connect(ui.actionOpen_File, &QAction::triggered, this, &ApplicationActivity::filePicker);
+	connect(ui.actionConnect, &QAction::triggered, this, &ApplicationActivity::connectPort);
+	connect(ui.actionDisconnect, &QAction::triggered, this, &ApplicationActivity::disconnectPort);
+	
 	ui.actionSend->setEnabled(false);
+	ui.actionDisconnect->setEnabled(false);
 }
 
 void ApplicationActivity::filePicker()
@@ -43,22 +44,29 @@ void ApplicationActivity::filePicker()
 	qDebug() << fileName;
 
 	inputFile.open(fileName.toStdString());
-	ui.actionSend->setEnabled(false);
-
-	if (inputFile.is_open())
+	
+	if (ui.actionDisconnect->isEnabled())
 	{
-		bFileOpen = true;
-		ui.actionSend->setEnabled(true);
-		statusBar()->showMessage(tr("Ready to send"));
+		ui.actionSend->setEnabled(false);
+
+		if (inputFile.is_open())
+		{
+			bFileOpen = true;
+			ui.actionSend->setEnabled(true);
+			statusBar()->showMessage(tr("File & Port ready. Ready to send."));
+		}
+	}
+	else {
+		statusBar()->showMessage(tr("File ready. Open port to send."));
 	}
 }
 
 bool ApplicationActivity::bidForLine() 
 {
-	controlFrame enq(QByteArray(1, ENQ));
-	sendData(enq.getFrame());
+	sendACK();
+	//TODO: write QTimer
 	auto startTimer = std::clock();
-	while( (std::clock() - startTimer) < 2 )
+	while( (std::clock() - startTimer) < 5 )
 	{
 		if (bReceivedACK && !bReceivedENQ)
 		{
@@ -68,9 +76,27 @@ bool ApplicationActivity::bidForLine()
 	//success;
 	return false;
 }
+void ApplicationActivity::disconnectPort()
+{
+	if (serial->isOpen())
+	{
+		serial->close();
+		if (serial->error())
+		{
+			handlePortExceptions(serial->error());
+		}
+	}
+	ui.actionConnect->setEnabled(true);
+	ui.actionDisconnect->setEnabled(false);
+	ui.actionSend->setEnabled(false);
+	statusBar()->showMessage(tr("Port closed."));
+}
 
 void ApplicationActivity::connectPort()
 {
+	bool ok;
+	comPort = QInputDialog::getText(this, tr("Com picker"),
+		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
 	//Set defaults
 	if (comPort == "")
 	{
@@ -97,6 +123,19 @@ void ApplicationActivity::connectPort()
 		//RX all
 		connect(serial, &QSerialPort::readyRead, this, &ApplicationActivity::readData);
 		connect(textBox, &TextBox::getData, this, &ApplicationActivity::fileToSend);
+		ui.actionConnect->setEnabled(false);
+		ui.actionDisconnect->setEnabled(true);
+	}
+
+	if (inputFile.is_open())
+	{
+		bFileOpen = true;
+		ui.actionSend->setEnabled(true);
+		statusBar()->showMessage(tr("File & Port ready. Ready to send."));
+	} 
+	else
+	{
+		statusBar()->showMessage(tr("Port ready. Choose a file to send."));
 	}
 }
 
@@ -138,6 +177,7 @@ void ApplicationActivity::fileToSend()
 		break;
 	}
 	inputFile.close();
+	statusBar()->showMessage(tr("Finished sending"));
 } 
 
 void ApplicationActivity::readData()
