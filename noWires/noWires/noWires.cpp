@@ -17,9 +17,9 @@ noWires::noWires(QWidget *parent)
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
-
-
 	connectPort();
+
+
 }
 
 inline void noWires::addButtons()
@@ -35,12 +35,35 @@ void noWires::startSending()
 {
 	//Start Protocol
 	statusBar()->showMessage(tr("Sending"));
-
-	char character;
-	while (true)
+	
+	//sendENQ();
+	//std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+	//if (readData() == true) // receives an ACK
 	{
-		QByteArray data;
-		for (int i = 0; i < 512; i++) {
+		for (int i = 0; i < 10; i++)
+		{
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+			sendOneDataFrame();
+			/*
+			if (handleReadData() == false) // doesn't receive an ACK
+			{
+				i--;
+				retransmit = true;
+			}
+			*/
+		}
+	}
+	
+
+}
+
+void noWires::sendOneDataFrame()
+{
+	char character;
+	QByteArray data;
+	
+		for (int i = 0; i < 512; i++)
+		{
 			inputFile.get(character);
 			if (inputFile.fail())
 			{
@@ -48,16 +71,14 @@ void noWires::startSending()
 			}
 			data[i] = character;
 		}
-		dataFrame frame(data);
-		qDebug() << frame.getFrame();
-		serial->write(frame.getFrame());
-		serial->flush();
-		break;
-
-	}
-	inputFile.close();
-
+	
+	dataFrame frame(data);
+	qDebug() << frame.getFrame();
+	serial->write(frame.getFrame());
+	serial->flush();
+	
 }
+
 
 void noWires::openAFile()
 {
@@ -78,13 +99,12 @@ void noWires::openAFile()
 }
 
 
-void noWires::readData()
+bool noWires::readData()
 {
 	buffer.append(serial->readAll());
 
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
 	{
-		//ACK
 		buffer.remove(0, 2);
 		sendACK();
 	}
@@ -123,9 +143,64 @@ void noWires::readData()
 			toRead.clear();
 		}
 	}
+	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
+	{
+		buffer.remove(0, 2);
+		return true;
+	}
+	return false;
+}
 
+bool noWires::handleReadData()
+{
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
+	{
+		//ACK
+		buffer.remove(0, 2);
+		sendACK();
+	}
+	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
+	{
+		if (buffer.size() >= 518)
+		{
+			//Data
+			QByteArray toRead(buffer, 518);
+			buffer.remove(0, 518);
+			QByteArray data;
+			QByteArray receivedCheckSum;
 
+			toRead.remove(0, 2);
+			data.append(toRead, 512);
+			toRead.remove(0, 512);
+			receivedCheckSum.append(toRead, 4);
+			buffer.remove(0, 4);
 
+			qDebug() << "DATA SIZE: " << data.size();
+			qDebug() << "DATA: " << data;
+
+			//calculate and check CRC
+			quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
+
+			QByteArray calculatedByteCheckSum;
+			calculatedByteCheckSum << crc;
+
+			qDebug() << "RECE CRC: " << receivedCheckSum;
+			qDebug() << "CALC CRC: " << calculatedByteCheckSum;
+
+			if (calculatedByteCheckSum == receivedCheckSum)
+			{
+				textBox->putData(data);
+				sendACK();
+			}
+			toRead.clear();
+		}
+	}
+	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
+	{
+		buffer.remove(0, 2);
+		return true;
+	}
+	return false;
 }
 
 void noWires::sendENQ()

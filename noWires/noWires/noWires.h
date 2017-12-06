@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QSerialPort>
 #include <QInputDialog>
+#include <chrono>
+#include <thread>
 
 #include <iostream>
 #include <fstream> 
@@ -38,19 +40,21 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 	QByteArray buffer;
+	bool retransmit;
 
 	Ui::noWiresClass ui;
 	inline void addButtons();
 	void openAFile();
+	void sendOneDataFrame();
 	void sendData(QByteArray toSend);
 	void sendENQ();
-
 	void sendACK();
+	bool handleReadData();
 
 
 
 public slots:
-	void readData();
+	bool readData();
 	void startSending();
 	void connectPort();
 
