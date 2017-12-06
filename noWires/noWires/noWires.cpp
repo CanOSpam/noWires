@@ -62,7 +62,7 @@ void noWires::startSending()
 
 	}
 	inputFile.close();
-
+	monitor->incrementTXFrames();
 }
 
 void noWires::openAFile()
@@ -88,9 +88,12 @@ void noWires::readData()
 {
 	buffer.append(serial->readAll());
 
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
+	{
+		monitor->incrementAck();
+	}
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
 	{
-		//ACK
 		buffer.remove(0, 2);
 		sendACK();
 	}
@@ -98,7 +101,7 @@ void noWires::readData()
 	{
 		if (buffer.size() >= 518)
 		{
-			monitor->incrementFrame();
+			monitor->incrementRXFrames();
 			//Data
 			QByteArray toRead(buffer, 518);
 			buffer.remove(0, 518);
@@ -126,6 +129,10 @@ void noWires::readData()
 			{
 				textBox->putData(data);
 				sendACK();
+			}
+			else 
+			{
+				monitor->incrementErrors();
 			}
 			toRead.clear();
 		}

@@ -11,13 +11,15 @@ class statusWindow : public QWidget
 public:
 	explicit statusWindow(QWidget *parent = 0);
 	void incrementAck();
-	void incrementFrame();
+	void incrementRXFrames();
+	void incrementTXFrames();
 	void incrementErrors();
 
 private:
 	Ui::statusWindow *ui;
 	int acks;
-	int frames;
+	int TXframes;
+	int RXframes;
 	int ber;
 	int errors;
 };

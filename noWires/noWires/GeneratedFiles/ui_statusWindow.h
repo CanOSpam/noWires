@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'statusWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.6.2
+** Created by: Qt User Interface Compiler version 5.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -28,8 +28,11 @@ public:
     QLabel *BERname;
     QLabel *BERNum;
     QFrame *line;
-    QLabel *label_4;
-    QLabel *FramesNum;
+    QLabel *FrameRXName_2;
+    QLabel *FramesTXNum;
+    QFrame *line_3;
+    QLabel *FramesRXName;
+    QLabel *FramesRXNum;
     QFrame *line_2;
     QLabel *ACKname;
     QLabel *AckNum;
@@ -58,15 +61,32 @@ public:
 
         verticalLayout->addWidget(line);
 
-        label_4 = new QLabel(statusWindow);
-        label_4->setObjectName(QStringLiteral("label_4"));
+        FrameRXName_2 = new QLabel(statusWindow);
+        FrameRXName_2->setObjectName(QStringLiteral("FrameRXName_2"));
 
-        verticalLayout->addWidget(label_4);
+        verticalLayout->addWidget(FrameRXName_2);
 
-        FramesNum = new QLabel(statusWindow);
-        FramesNum->setObjectName(QStringLiteral("FramesNum"));
+        FramesTXNum = new QLabel(statusWindow);
+        FramesTXNum->setObjectName(QStringLiteral("FramesTXNum"));
 
-        verticalLayout->addWidget(FramesNum);
+        verticalLayout->addWidget(FramesTXNum);
+
+        line_3 = new QFrame(statusWindow);
+        line_3->setObjectName(QStringLiteral("line_3"));
+        line_3->setFrameShape(QFrame::HLine);
+        line_3->setFrameShadow(QFrame::Sunken);
+
+        verticalLayout->addWidget(line_3);
+
+        FramesRXName = new QLabel(statusWindow);
+        FramesRXName->setObjectName(QStringLiteral("FramesRXName"));
+
+        verticalLayout->addWidget(FramesRXName);
+
+        FramesRXNum = new QLabel(statusWindow);
+        FramesRXNum->setObjectName(QStringLiteral("FramesRXNum"));
+
+        verticalLayout->addWidget(FramesRXNum);
 
         line_2 = new QFrame(statusWindow);
         line_2->setObjectName(QStringLiteral("line_2"));
@@ -93,13 +113,15 @@ public:
 
     void retranslateUi(QWidget *statusWindow)
     {
-        statusWindow->setWindowTitle(QApplication::translate("statusWindow", "Form", 0));
-        BERname->setText(QApplication::translate("statusWindow", "Bit Error Rate", 0));
-        BERNum->setText(QApplication::translate("statusWindow", "0", 0));
-        label_4->setText(QApplication::translate("statusWindow", "Frames", 0));
-        FramesNum->setText(QApplication::translate("statusWindow", "0", 0));
-        ACKname->setText(QApplication::translate("statusWindow", "ACKs", 0));
-        AckNum->setText(QApplication::translate("statusWindow", "0", 0));
+        statusWindow->setWindowTitle(QApplication::translate("statusWindow", "Form", Q_NULLPTR));
+        BERname->setText(QApplication::translate("statusWindow", "Bit Error Rate", Q_NULLPTR));
+        BERNum->setText(QApplication::translate("statusWindow", "0", Q_NULLPTR));
+        FrameRXName_2->setText(QApplication::translate("statusWindow", "Frames Sent", Q_NULLPTR));
+        FramesTXNum->setText(QApplication::translate("statusWindow", "0", Q_NULLPTR));
+        FramesRXName->setText(QApplication::translate("statusWindow", "Frames Received", Q_NULLPTR));
+        FramesRXNum->setText(QApplication::translate("statusWindow", "0", Q_NULLPTR));
+        ACKname->setText(QApplication::translate("statusWindow", "ACKs Received", Q_NULLPTR));
+        AckNum->setText(QApplication::translate("statusWindow", "0", Q_NULLPTR));
     } // retranslateUi
 
 };

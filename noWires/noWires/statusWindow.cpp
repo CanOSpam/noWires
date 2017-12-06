@@ -8,7 +8,8 @@ statusWindow::statusWindow(QWidget *parent)
 
 	acks = 0;
 	ber = 0;
-	frames = 0;
+	TXframes = 0;
+	RXframes = 0;
 	errors = 0;
 }
 
@@ -18,15 +19,21 @@ void statusWindow::incrementAck()
 	ui->AckNum->setText(QString::number(acks));
 }
 
-void statusWindow::incrementFrame()
+void statusWindow::incrementRXFrames()
 {
-	frames++;
-	ui->FramesNum->setText(QString::number(frames));
+	RXframes++;
+	ui->FramesRXNum->setText(QString::number(RXframes));
+}
+
+void statusWindow::incrementTXFrames()
+{
+	TXframes++;
+	ui->FramesTXNum->setText(QString::number(TXframes));
 }
 
 void statusWindow::incrementErrors()
 {
 	errors++;
-	ber = errors / frames;
+	ber = errors / RXframes;
 	ui->BERNum->setText(QString::number(ber));
 }
