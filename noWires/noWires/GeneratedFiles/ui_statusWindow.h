@@ -96,9 +96,9 @@ public:
         statusWindow->setWindowTitle(QApplication::translate("statusWindow", "Form", 0));
         BERname->setText(QApplication::translate("statusWindow", "Bit Error Rate", 0));
         BERNum->setText(QApplication::translate("statusWindow", "0", 0));
-        label_4->setText(QApplication::translate("statusWindow", "Frames", 0));
+        label_4->setText(QApplication::translate("statusWindow", "Frames Received", 0));
         FramesNum->setText(QApplication::translate("statusWindow", "0", 0));
-        ACKname->setText(QApplication::translate("statusWindow", "ACKs", 0));
+        ACKname->setText(QApplication::translate("statusWindow", "ACKs Received", 0));
         AckNum->setText(QApplication::translate("statusWindow", "0", 0));
     } // retranslateUi
 

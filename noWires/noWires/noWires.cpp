@@ -33,6 +33,7 @@ inline void noWires::addButtons()
 
 	connect(ui.actionSend, &QAction::triggered, this, &noWires::startSending);
 	connect(ui.actionOpen_File, &QAction::triggered, this, &noWires::openAFile);
+	connect(ui.actionRVI, &QAction::triggered, this, &noWires::sendRVI);
 	ui.actionSend->setEnabled(false);
 }
 
@@ -144,6 +145,12 @@ void noWires::sendENQ()
 void noWires::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
+	serial->write(ack.getFrame());
+}
+
+void noWires::sendRVI()
+{
+	controlFrame ack(QByteArray(1, RVI));
 	serial->write(ack.getFrame());
 }
 

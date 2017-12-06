@@ -27,6 +27,7 @@ class Ui_noWiresClass
 public:
     QAction *actionOpen_File;
     QAction *actionSend;
+    QAction *actionRVI;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -41,6 +42,8 @@ public:
         actionOpen_File->setObjectName(QStringLiteral("actionOpen_File"));
         actionSend = new QAction(noWiresClass);
         actionSend->setObjectName(QStringLiteral("actionSend"));
+        actionRVI = new QAction(noWiresClass);
+        actionRVI->setObjectName(QStringLiteral("actionRVI"));
         centralWidget = new QWidget(noWiresClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         noWiresClass->setCentralWidget(centralWidget);
@@ -57,6 +60,7 @@ public:
 
         mainToolBar->addAction(actionOpen_File);
         mainToolBar->addAction(actionSend);
+        mainToolBar->addAction(actionRVI);
 
         retranslateUi(noWiresClass);
 
@@ -71,6 +75,10 @@ public:
         actionOpen_File->setToolTip(QApplication::translate("noWiresClass", "Choose a file to open", 0));
 #endif // QT_NO_TOOLTIP
         actionSend->setText(QApplication::translate("noWiresClass", "Send", 0));
+        actionRVI->setText(QApplication::translate("noWiresClass", "RVI", 0));
+#ifndef QT_NO_TOOLTIP
+        actionRVI->setToolTip(QApplication::translate("noWiresClass", "Send an RVI", 0));
+#endif // QT_NO_TOOLTIP
     } // retranslateUi
 
 };

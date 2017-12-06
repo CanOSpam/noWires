@@ -22,7 +22,7 @@
 #define ACK 0x06
 #define ENQ 0x05
 #define SYN 0x16
-
+#define RVI 0x07
 
 class noWires : public QMainWindow
 {
@@ -56,6 +56,7 @@ public slots:
 	void readData();
 	void startSending();
 	void connectPort();
+	void sendRVI();
 
 };
 
