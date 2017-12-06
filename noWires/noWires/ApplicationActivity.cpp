@@ -1,12 +1,30 @@
 #include "ApplicationActivity.h"
-
+/*------------------------------------------------------------------------------------------------------------------
+-- SOURCE FILE: ApplicationActivity.cpp
+--
+-- PROGRAM: noWries
+--
+-- FUNCTIONS:
+-- PUT FUNCTION ONCE FINALIZED
+--
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNERS: Tim Bruecker, JC Tee, Keir Forster, Alex Xia
+--
+-- PROGRAMMERS: Tim Bruecker, JC Tee, Keir Forster, Alex Xia
+--
+-- NOTES:
+-- This is the core class that runs the main window and executes most of the logic of the application. The protocol
+-- decision structure and all the serial port and file handling happens in this file.
+----------------------------------------------------------------------------------------------------------------------*/
 ApplicationActivity::ApplicationActivity(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	bFileOpen = false;
-	bReceivedENQ = false;
-	bReceivedACK = false;
 
 	addButtons();
 
@@ -14,15 +32,15 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
 	monitor = new statusWindow();
 	monitor->show();
 
+	//Show frames status
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
 
  	//serial port not usable until opened
  	serial = new QSerialPort(comPort, this); 
-	//connectPort(); //dont call it here
 }
-//leave this here, altho its redundant cause Qt handles mem mngmnt
+
 ApplicationActivity::~ApplicationActivity()
 {
 	closePort();
@@ -30,6 +48,25 @@ ApplicationActivity::~ApplicationActivity()
 	delete monitor;
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: addButtons
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void addButtons()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function connects all the UI buttons to appropriate functions and disables the start sending button, as you can't
+-- send before you have a file.
+----------------------------------------------------------------------------------------------------------------------*/
 inline void ApplicationActivity::addButtons()
 {
 	connect(ui.actionSend, &QAction::triggered, this, &ApplicationActivity::fileToSend);
@@ -69,18 +106,15 @@ void ApplicationActivity::filePicker()
 
 bool ApplicationActivity::bidForLine() 
 {
-	sendACK();
-	//TODO: write QTimer
-	auto startTimer = std::clock();
-	while( (std::clock() - startTimer) < 5 )
+	sendENQ();
+	// QTime time = QTime::currentTime();
+	serial->waitForReadyRead(2000);
+	// std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+	if( !bReceivedACK && !bReceivedENQ )
 	{
-		if (bReceivedACK && !bReceivedENQ)
-		{
-			return true;
-		}
+		return false;
 	}
-	//success;
-	return false;
+	return true;
 }
 void ApplicationActivity::disconnectPort()
 {
@@ -98,6 +132,25 @@ void ApplicationActivity::disconnectPort()
 	statusBar()->showMessage(tr("Port closed."));
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: connectPort
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void connectPort()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This passes the port name supplied by the user and sets the port name to the required settings to work with the
+-- wireless modem. Then writes an error message or some basic data for the port to the console.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::connectPort()
 {
 	bool ok;
@@ -145,47 +198,45 @@ void ApplicationActivity::connectPort()
 	}
 }
 
-//vetoed as usual
-int timer()
-{
-	std::clock_t timer;
-	double start = std::clock(); 
-	double duration = (std::clock() - start); 
-	return duration;
-}
-
 //orig startSending
 void ApplicationActivity::fileToSend()
 {
 	//Start Protocol
 	statusBar()->showMessage(tr("Sending"));
-	/*if (!bidForLine())
+	if (!bidForLine())
 	{
 		qDebug() << "Bidding failed. Did not receive ACK in time" << "\n";
-		closePort();
 		return;
-	}*/
-	char character;
-	while (true)
-	{
-		QByteArray data;
-		for (int i = 0; i < 512; i++) {
-			inputFile.get(character);
-			if (inputFile.fail())
-			{
-				break;
-			}
-			data[i] = character;
-		}
-		dataFrame frame(data);
-		std::cout << frame.getFrame().toStdString();
-		sendData(frame.getFrame());
-		break;
 	}
-	inputFile.close();
+	for (int i = 0; i < 10; i++)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		sendOneDataFrame();
+	}
+} 
+
+void ApplicationActivity::sendOneDataFrame()
+{
+	char character;
+	QByteArray data;
+	for (int i = 0; i < 512; i++) 
+	{
+		inputFile.get(character);
+		if (inputFile.fail())
+		{
+			inputFile.close();
+			break;
+		}
+		data[i] = character;
+	}
+
+	dataFrame frame(data);
+	std::cout << frame.getFrame().toStdString();
+	sendData(frame.getFrame());
+	//inputFile.close();
 	monitor->incrementTXFrames();
 	statusBar()->showMessage(tr("Finished sending"));
-} 
+}
 
 void ApplicationActivity::readData()
 {
@@ -195,12 +246,14 @@ void ApplicationActivity::readData()
 	//enq
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
 	{
+		bReceivedENQ = true;
 		buffer.remove(0, 2);
 		sendACK();
 	}
 	//ack
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
 	{
+		bReceivedACK = true;
 		monitor->incrementAck();
 		std::cout << "\n" << buffer[0] << buffer[1] << "\n";
 		buffer.remove(0, 2);
@@ -208,6 +261,9 @@ void ApplicationActivity::readData()
 	//data
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
 	{
+		//reset bid controls on receiving data frame
+		bReceivedENQ = true;
+		bReceivedACK = true;
 		if (buffer.size() >= 518)
 		{
 			monitor->incrementRXFrames();
@@ -248,7 +304,24 @@ void ApplicationActivity::readData()
 		}
   	}
 }
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendENQ
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendENQ()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an ENQ and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::sendENQ()
 {
 	controlFrame enq(QByteArray(1, ENQ));
@@ -256,6 +329,24 @@ void ApplicationActivity::sendENQ()
 	serial->write(enq.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendACK
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendACK()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an ACK and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
@@ -263,6 +354,24 @@ void ApplicationActivity::sendACK()
 	// serial->write(ack.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendRVI
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendRVI()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function frames an RVI and writes it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::sendRVI()
 {
 	controlFrame rvi(QByteArray(1, RVI));
@@ -270,6 +379,24 @@ void ApplicationActivity::sendRVI()
 	serial->write(rvi.getFrame());
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendData
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Tim Bruecker
+--
+-- PROGRAMMER: Tim Bruecker
+--
+-- INTERFACE: void sendData(QByteArray toSend)
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This writes the QByteArray passed to it to the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::sendData(QByteArray toSend)
 {
 	if (serial->isOpen())
@@ -290,6 +417,7 @@ void ApplicationActivity::handlePortExceptions(QSerialPort::SerialPortError e)
 	msgBox.exec();
 	closePort();
 }
+
 
 void ApplicationActivity::closePort()
 {

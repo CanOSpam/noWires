@@ -8,10 +8,12 @@
 #include <QSerialPort>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QTime>
 
 #include <iostream>
 #include <fstream> 
-#include <ctime>
+#include <chrono>
+#include <thread>
 
 #include "ui_noWires.h"
 #include "controlFrame.h"
@@ -45,6 +47,7 @@ private:
 	QString fileName;
 	std::ifstream inputFile;
 	bool bFileOpen;
+	bool retransmit;
 	bool bReceivedENQ;
 	bool bReceivedACK;
 	QSerialPort *serial;
@@ -59,7 +62,8 @@ private:
 	bool bidForLine();
 
 	inline void addButtons();
-	void filePicker();
+	void filePicker(); //orig openAFile
+	void sendOneDataFrame();
 	void sendData(QByteArray toSend);
 	void sendENQ();
 	void sendACK();
