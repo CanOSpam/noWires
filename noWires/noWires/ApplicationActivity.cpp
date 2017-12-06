@@ -22,7 +22,7 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
  	serial = new QSerialPort(comPort, this); 
 	//connectPort(); //dont call it here
 }
-
+//leave this here, altho its redundant cause Qt handles mem mngmnt
 ApplicationActivity::~ApplicationActivity()
 {
 	closePort();
@@ -202,7 +202,7 @@ void ApplicationActivity::readData()
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
 	{
 		monitor->incrementAck();
-		std::cout << buffer[0] << buffer[1] << "\n";
+		std::cout << "\n" << buffer[0] << buffer[1] << "\n";
 		buffer.remove(0, 2);
 	}
 	//data
