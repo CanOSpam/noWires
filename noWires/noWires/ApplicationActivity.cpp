@@ -5,7 +5,21 @@
 -- PROGRAM: noWries
 --
 -- FUNCTIONS:
--- PUT FUNCTION ONCE FINALIZED
+-- void closePort();
+-- void handlePortExceptions(QSerialPort::SerialPortError e);
+-- void prepareToSend();
+-- bool bidForLine();
+-- inline void addButtons();
+-- void filePicker();
+-- void sendOneDataFrame();
+-- void sendData(QByteArray toSend);
+-- void sendENQ();
+-- void sendACK();
+-- void readData();
+-- void fileToSend();
+-- void connectPort();
+-- void disconnectPort();
+-- void sendRVI();
 --
 --
 -- DATE: Dec 05, 2017
@@ -79,6 +93,25 @@ inline void ApplicationActivity::addButtons()
 	ui.actionDisconnect->setEnabled(false);
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: filePicker
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Keir Forster
+--
+-- PROGRAMMER: Keir Forster
+--
+-- INTERFACE: void filePicker()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function selects a text file from the local file system to prepare for sending.
+----------------------------------------------------------------------------------------------------------------------*/
+
 void ApplicationActivity::filePicker()
 {
 	fileName = QFileDialog::getOpenFileName(this,
@@ -103,7 +136,24 @@ void ApplicationActivity::filePicker()
 		statusBar()->showMessage(tr("File ready. Open port to send."));
 	}
 }
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: bidForLine
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Alex Xia
+--
+-- PROGRAMMER: Alex Xia
+--
+-- INTERFACE: bool bidForLine()
+--
+-- RETURNS: bool
+--
+-- NOTES:
+-- This function sends an enquiry to request permission to use the line.
+----------------------------------------------------------------------------------------------------------------------*/
 bool ApplicationActivity::bidForLine() 
 {
 	sendENQ();
@@ -116,6 +166,24 @@ bool ApplicationActivity::bidForLine()
 	}
 	return true;
 }
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: disconnectPort
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Alex Xia
+--
+-- PROGRAMMER: Alex Xia
+--
+-- INTERFACE: void disconnectPort()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function disconnects the serial port, if open, and updates the main window status.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::disconnectPort()
 {
 	if (serial->isOpen())
@@ -198,7 +266,25 @@ void ApplicationActivity::connectPort()
 	}
 }
 
-//orig startSending
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: fileToSend
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Alex Xia
+--
+-- PROGRAMMER: Alex Xia
+--
+-- INTERFACE: void fileToSend()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function checks whether or not permission has been granted to use the line, if so it sends one frame
+-- at a time, and updates the main window status bar.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::fileToSend()
 {
 	//Start Protocol
@@ -215,6 +301,25 @@ void ApplicationActivity::fileToSend()
 	}
 } 
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: sendOneDataFrame
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: John Tee
+--
+-- PROGRAMMER: John Tee
+--
+-- INTERFACE: void sendOneDataFrame()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function gets each character from the user selected text file and sends a frame containing a maximum of 512
+-- characters. THe main window status bar is also updated.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::sendOneDataFrame()
 {
 	char character;
@@ -238,6 +343,25 @@ void ApplicationActivity::sendOneDataFrame()
 	statusBar()->showMessage(tr("Finished sending"));
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: readData
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: John Tee
+--
+-- PROGRAMMER: John Tee
+--
+-- INTERFACE: void readData()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function checks the received data for any enq's and ack's, extracts the payload from the data
+-- and stores it a buffer, and does error detection on data.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::readData()
 {
 
@@ -406,8 +530,24 @@ void ApplicationActivity::sendData(QByteArray toSend)
 	}
 } 
 
-/* Handles unexpected errors QSerialPort might throw.
-Does not check for or handle mistakes in data.  */
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: handlePortExceptions
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Alex Xia
+--
+-- PROGRAMMER: Alex Xia
+--
+-- INTERFACE: void handlePortExceptions()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- Handles unexpected errors QSerialPort might throw. Does not check for or handle errors in the data.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::handlePortExceptions(QSerialPort::SerialPortError e)
 {
 	QMessageBox msgBox;
@@ -418,7 +558,24 @@ void ApplicationActivity::handlePortExceptions(QSerialPort::SerialPortError e)
 	closePort();
 }
 
-
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION: closePort
+--
+-- DATE: Dec 05, 2017
+--
+-- REVISIONS: None
+--
+-- DESIGNER: Alex Xia
+--
+-- PROGRAMMER: Alex Xia
+--
+-- INTERFACE: void closePort()
+--
+-- RETURNS: void
+--
+-- NOTES:
+-- This function handles closing the serial port.
+----------------------------------------------------------------------------------------------------------------------*/
 void ApplicationActivity::closePort()
 {
 	// this if statment isnt actually needed, Qt handles closing null ports itself
