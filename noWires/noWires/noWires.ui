@@ -35,6 +35,7 @@
    <addaction name="actionSend"/>
    <addaction name="actionConnect"/>
    <addaction name="actionDisconnect"/>
+   <addaction name="actionRVI"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen_File">
@@ -64,6 +65,14 @@
    </property>
    <property name="toolTip">
     <string>Disconnect from serial port</string>
+   </property>
+  </action>
+  <action name="actionRVI">
+   <property name="text">
+    <string>RVI</string>
+   </property>
+   <property name="toolTip">
+    <string>Send an RVI</string>
    </property>
   </action>
  </widget>

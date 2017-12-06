@@ -18,11 +18,13 @@
 #include "dataFrame.h"
 #include "textBox.h"
 #include "CRCpp.h"
-
+#include "statusWindow.h"
 
 #define ACK 0x06
 #define ENQ 0x05
 #define SYN 0x16
+#define RVI 0x07
+
 
 namespace Ui 
 {
@@ -48,19 +50,18 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 	QByteArray buffer;
-
 	Ui::mainWindow ui;
-	inline void addButtons();
-	//void startSending();
-	//void openAFile();
-	void getControlToSend();
+	statusWindow *monitor;
+
 	void closePort();
 	void handlePortExceptions(QSerialPort::SerialPortError e);
-	void sendData(QByteArray toSend);
 	void prepareToSend();
 	bool bidForLine();
-	void filePicker();
 
+	inline void addButtons();
+	void filePicker();
+	void sendData(QByteArray toSend);
+	void sendENQ();
 	void sendACK();
 
 public slots:
@@ -68,5 +69,7 @@ public slots:
 	void fileToSend(); //orig startSending();
 	void connectPort();
 	void disconnectPort();
+	void sendRVI();
+
 };
 

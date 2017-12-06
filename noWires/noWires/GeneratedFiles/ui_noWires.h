@@ -29,6 +29,7 @@ public:
     QAction *actionSend;
     QAction *actionConnect;
     QAction *actionDisconnect;
+    QAction *actionRVI;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -47,6 +48,8 @@ public:
         actionConnect->setObjectName(QStringLiteral("actionConnect"));
         actionDisconnect = new QAction(mainWindow);
         actionDisconnect->setObjectName(QStringLiteral("actionDisconnect"));
+        actionRVI = new QAction(mainWindow);
+        actionRVI->setObjectName(QStringLiteral("actionRVI"));
         centralWidget = new QWidget(mainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         mainWindow->setCentralWidget(centralWidget);
@@ -65,6 +68,7 @@ public:
         mainToolBar->addAction(actionSend);
         mainToolBar->addAction(actionConnect);
         mainToolBar->addAction(actionDisconnect);
+        mainToolBar->addAction(actionRVI);
 
         retranslateUi(mainWindow);
 
@@ -86,6 +90,10 @@ public:
         actionDisconnect->setText(QApplication::translate("mainWindow", "Disconnect", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         actionDisconnect->setToolTip(QApplication::translate("mainWindow", "Disconnect from serial port", Q_NULLPTR));
+#endif // QT_NO_TOOLTIP
+        actionRVI->setText(QApplication::translate("mainWindow", "RVI", Q_NULLPTR));
+#ifndef QT_NO_TOOLTIP
+        actionRVI->setToolTip(QApplication::translate("mainWindow", "Send an RVI", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
     } // retranslateUi
 

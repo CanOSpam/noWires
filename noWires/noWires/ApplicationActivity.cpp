@@ -10,6 +10,10 @@ ApplicationActivity::ApplicationActivity(QWidget *parent)
 
 	addButtons();
 
+	//Show Status monitor
+	monitor = new statusWindow();
+	monitor->show();
+
 	textBox = new TextBox;
 	setCentralWidget(textBox);
 	textBox->setLocalEchoEnabled(false);
@@ -23,6 +27,7 @@ ApplicationActivity::~ApplicationActivity()
 {
 	closePort();
 	delete textBox;
+	delete monitor;
 }
 
 inline void ApplicationActivity::addButtons()
@@ -30,6 +35,7 @@ inline void ApplicationActivity::addButtons()
 	connect(ui.actionSend, &QAction::triggered, this, &ApplicationActivity::fileToSend);
 	connect(ui.actionOpen_File, &QAction::triggered, this, &ApplicationActivity::filePicker);
 	connect(ui.actionConnect, &QAction::triggered, this, &ApplicationActivity::connectPort);
+	connect(ui.actionRVI, &QAction::triggered, this, &ApplicationActivity::sendRVI);
 	connect(ui.actionDisconnect, &QAction::triggered, this, &ApplicationActivity::disconnectPort);
 	
 	ui.actionSend->setEnabled(false);
@@ -177,6 +183,7 @@ void ApplicationActivity::fileToSend()
 		break;
 	}
 	inputFile.close();
+	monitor->incrementTXFrames();
 	statusBar()->showMessage(tr("Finished sending"));
 } 
 
@@ -194,7 +201,7 @@ void ApplicationActivity::readData()
 	//ack
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
 	{
-		
+		monitor->incrementAck();
 		bReceivedACK = true;
 	}
 	//data
@@ -202,10 +209,10 @@ void ApplicationActivity::readData()
 	{
 		if (buffer.size() >= 518)
 		{
+			monitor->incrementRXFrames();
 			qDebug() << "FRAME SIZE: " << buffer.count();
 			std::cout << "FRAME : " << buffer.toStdString() << "\n";
 			//Data
-			//check CRC
 			QByteArray toRead(buffer, 518);
 			buffer.remove(0, 518);
 			QByteArray data;
@@ -232,21 +239,34 @@ void ApplicationActivity::readData()
 				controlFrame ack(QByteArray(1, ACK));
 				serial->write(ack.getFrame());
 			}
+			else 
+			{
+				monitor->incrementErrors();
+			}
 			toRead.clear();
 		}
   	}
 }
 
-void ApplicationActivity::getControlToSend()
+void ApplicationActivity::sendENQ()
 {
 	controlFrame enq(QByteArray(1, ENQ));
-	sendData(enq.getFrame());
+	// sendData(enq.getFrame());
+	serial->write(enq.getFrame());
 }
 
 void ApplicationActivity::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
-	sendData(ack.getFrame());
+	// sendData(ack.getFrame());
+	serial->write(ack.getFrame());
+}
+
+void ApplicationActivity::sendRVI()
+{
+	controlFrame rvi(QByteArray(1, RVI));
+	// sendData(rvi.getFrame());
+	serial->write(rvi.getFrame());
 }
 
 void ApplicationActivity::sendData(QByteArray toSend)

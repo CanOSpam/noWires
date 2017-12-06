@@ -79,6 +79,15 @@
     <ClCompile Include="ReceiveActivity.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_statusWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_statusWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="statusWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.ui">
@@ -91,6 +100,12 @@
       <Filter>textbox</Filter>
     </CustomBuild>
     <CustomBuild Include="ApplicationActivity.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="statusWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="statusWindow.h">
       <Filter>Core</Filter>
     </CustomBuild>
   </ItemGroup>
@@ -118,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="ReceiveActivity.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_statusWindow.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
