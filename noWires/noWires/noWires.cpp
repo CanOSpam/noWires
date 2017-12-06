@@ -226,57 +226,7 @@ bool noWires::readData()
 	return false;
 }
 
-bool noWires::handleReadData()
-{
-	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
-	{
-		//ACK
-		buffer.remove(0, 2);
-		sendACK();
-	}
-	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
-	{
-		if (buffer.size() >= 518)
-		{
-			//Data
-			QByteArray toRead(buffer, 518);
-			buffer.remove(0, 518);
-			QByteArray data;
-			QByteArray receivedCheckSum;
 
-			toRead.remove(0, 2);
-			data.append(toRead, 512);
-			toRead.remove(0, 512);
-			receivedCheckSum.append(toRead, 4);
-			buffer.remove(0, 4);
-
-			qDebug() << "DATA SIZE: " << data.size();
-			qDebug() << "DATA: " << data;
-
-			//calculate and check CRC
-			quint32 crc = CRC::Calculate(data, 512, CRC::CRC_32());
-
-			QByteArray calculatedByteCheckSum;
-			calculatedByteCheckSum << crc;
-
-			qDebug() << "RECE CRC: " << receivedCheckSum;
-			qDebug() << "CALC CRC: " << calculatedByteCheckSum;
-
-			if (calculatedByteCheckSum == receivedCheckSum)
-			{
-				textBox->putData(data);
-				sendACK();
-			}
-			toRead.clear();
-		}
-	}
-	else if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
-	{
-		buffer.remove(0, 2);
-		return true;
-	}
-	return false;
-}
 
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: sendENQ
