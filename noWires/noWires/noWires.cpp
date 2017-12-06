@@ -48,6 +48,7 @@ noWires::noWires(QWidget *parent)
 	connectPort();
 }
 
+<<<<<<< HEAD
 /*------------------------------------------------------------------------------------------------------------------
 -- FUNCTION: addButtons
 --
@@ -67,6 +68,7 @@ noWires::noWires(QWidget *parent)
 -- This function connects all the UI buttons to appropriate functions and disables the start sending button, as you can't
 -- send before you have a file.
 ----------------------------------------------------------------------------------------------------------------------*/
+
 inline void noWires::addButtons()
 {
 
