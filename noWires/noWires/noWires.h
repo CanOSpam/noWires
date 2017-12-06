@@ -32,7 +32,6 @@ class noWires : public QMainWindow
 
 public:
 	noWires(QWidget *parent = Q_NULLPTR);
-	~noWires();
 
 private:
 	QString comPort;
@@ -42,11 +41,7 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 	QByteArray buffer;
-<<<<<<< HEAD
 	bool retransmit;
-
-=======
->>>>>>> 3ffd8fa6ae446b70b60a2911a8ec3ad201edaab9
 	Ui::noWiresClass ui;
 	statusWindow *monitor;
 

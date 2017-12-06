@@ -2,6 +2,7 @@
 
 #include <QtCore/QDebug>
 
+//This is a Qt class
 TextBox::TextBox(QWidget *parent)
 	: QPlainTextEdit(parent)
 	, localEchoEnabled(false)

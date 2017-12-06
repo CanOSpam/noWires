@@ -110,9 +110,6 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_noWires.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="frame.h">
       <Filter>Frames</Filter>
     </ClInclude>
@@ -127,9 +124,6 @@
     </ClInclude>
     <ClInclude Include="CRCpp.h">
       <Filter>CRCpp</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_statusWindow.h">
-      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
