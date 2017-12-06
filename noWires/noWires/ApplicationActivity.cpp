@@ -202,7 +202,8 @@ void ApplicationActivity::readData()
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
 	{
 		monitor->incrementAck();
-		bReceivedACK = true;
+		std::cout << buffer[0] << buffer[1] << "\n";
+		buffer.remove(0, 2);
 	}
 	//data
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)STX))
@@ -258,8 +259,8 @@ void ApplicationActivity::sendENQ()
 void ApplicationActivity::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
-	// sendData(ack.getFrame());
-	serial->write(ack.getFrame());
+	sendData(ack.getFrame());
+	// serial->write(ack.getFrame());
 }
 
 void ApplicationActivity::sendRVI()
