@@ -14,6 +14,7 @@
 #include <fstream> 
 #include <chrono>
 #include <thread>
+#include <random>
 
 #include "ui_noWires.h"
 #include "controlFrame.h"
@@ -47,7 +48,6 @@ private:
 	QString fileName;
 	std::ifstream inputFile;
 	bool bFileOpen;
-	bool retransmit;
 	bool bReceivedENQ;
 	bool bReceivedACK;
 	QSerialPort *serial;
@@ -67,6 +67,8 @@ private:
 	void sendData(QByteArray toSend);
 	void sendENQ();
 	void sendACK();
+	bool retransmit();
+	size_t getRandomTimeout();
 
 public slots:
 	void readData();

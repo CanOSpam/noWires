@@ -108,7 +108,7 @@ bool ApplicationActivity::bidForLine()
 {
 	sendENQ();
 	// QTime time = QTime::currentTime();
-	serial->waitForReadyRead(2000);
+	serial->waitForReadyRead(getRandomTimeout());
 	// std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 	if( !bReceivedACK && !bReceivedENQ )
 	{
@@ -208,12 +208,73 @@ void ApplicationActivity::fileToSend()
 		qDebug() << "Bidding failed. Did not receive ACK in time" << "\n";
 		return;
 	}
-	for (int i = 0; i < 10; i++)
+
+	while (inputFile.is_open() )
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-		sendOneDataFrame();
+		// sendOneDataFrame();
+		for (int i = 0; i < 10; i++)
+		{
+			//will return false (timeout) after 2000
+			//if receive serial data b4 then, returns true
+			// {
+				sendOneDataFrame();
+				// std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+				if (!inputFile.is_open())
+				{
+					return;
+				}
+				serial->waitForReadyRead(getRandomTimeout());
+			// } 
+		// 	else 
+		// 	{
+		// 		if (retransmit())
+		// 		{
+		// 			continue;
+		// 		}
+		// 		else 
+		// 		{
+		// 			QMessageBox msgBox;
+		// 			msgBox.setText("Receiver timed out");
+		// 			msgBox.setDefaultButton(QMessageBox::Ok);
+		// 			msgBox.exec();
+		// 			return;
+		// 		}
+		// 	}
+		}
 	}
 } 
+
+bool ApplicationActivity::retransmit() 
+{
+	//get position in file
+	int fseekPos = inputFile.tellg();
+	for (int i = 0; i < 3; i++)
+	{
+		inputFile.seekg(fseekPos);
+		sendOneDataFrame();
+		//on timeout, restart loop
+		if (!serial->waitForReadyRead(getRandomTimeout())) 
+		{
+			continue;
+		} 
+		else 
+		{
+			return true;
+		}
+	}
+	//3 attempts used
+	return false;
+}
+
+size_t ApplicationActivity::getRandomTimeout()
+{
+	std::mt19937 rng;
+	rng.seed(std::random_device()());
+	std::uniform_int_distribution<std::mt19937::result_type> rngRange(1, 10);
+	size_t rngNum = rngRange(rng);
+	//the formula the class(Benny) decided on
+	return 2000u + rngNum * 100u;
+}
 
 void ApplicationActivity::sendOneDataFrame()
 {
