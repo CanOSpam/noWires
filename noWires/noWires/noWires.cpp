@@ -28,6 +28,13 @@ noWires::noWires(QWidget *parent)
 	connectPort();
 }
 
+noWires::~noWires()
+{
+	delete monitor;
+	delete serial;
+	delete textBox;
+}
+
 inline void noWires::addButtons()
 {
 

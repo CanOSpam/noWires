@@ -30,6 +30,7 @@ class noWires : public QMainWindow
 
 public:
 	noWires(QWidget *parent = Q_NULLPTR);
+	~noWires();
 
 private:
 	QString comPort;
