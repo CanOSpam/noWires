@@ -10,8 +10,14 @@ noWires::noWires(QWidget *parent)
 	addButtons();
 
 	bool ok;
+
+	//Show Com select dialog
 	comPort = QInputDialog::getText(this, tr("Com picker"),
 		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
+
+	//Show Status monitor
+	monitor = new statusWindow();
+	monitor->show();
 
 	serial = new QSerialPort(comPort, this);
 	textBox = new TextBox;
@@ -92,6 +98,7 @@ void noWires::readData()
 	{
 		if (buffer.size() >= 518)
 		{
+			monitor->incrementFrame();
 			//Data
 			QByteArray toRead(buffer, 518);
 			buffer.remove(0, 518);

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>statusWindow</class>
+ <widget class="QWidget" name="statusWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>184</width>
+    <height>175</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="BERname">
+     <property name="text">
+      <string>Bit Error Rate</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="BERNum">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Frames Received</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="FramesNum">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="ACKname">
+     <property name="text">
+      <string>ACKs Received</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="AckNum">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

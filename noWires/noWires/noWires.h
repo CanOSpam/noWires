@@ -16,6 +16,7 @@
 #include "dataFrame.h"
 #include "textBox.h"
 #include "CRCpp.h"
+#include "statusWindow.h"
 
 
 #define ACK 0x06
@@ -38,8 +39,10 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 	QByteArray buffer;
-
 	Ui::noWiresClass ui;
+	statusWindow *monitor;
+
+	
 	inline void addButtons();
 	void openAFile();
 	void sendData(QByteArray toSend);
