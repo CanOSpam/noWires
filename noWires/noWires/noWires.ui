@@ -33,6 +33,7 @@
    </attribute>
    <addaction name="actionOpen_File"/>
    <addaction name="actionSend"/>
+   <addaction name="actionRVI"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen_File">
@@ -46,6 +47,14 @@
   <action name="actionSend">
    <property name="text">
     <string>Send</string>
+   </property>
+  </action>
+  <action name="actionRVI">
+   <property name="text">
+    <string>RVI</string>
+   </property>
+   <property name="toolTip">
+    <string>Send an RVI</string>
    </property>
   </action>
  </widget>

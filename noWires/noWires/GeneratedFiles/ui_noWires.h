@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'noWires.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.3
+** Created by: Qt User Interface Compiler version 5.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -27,6 +27,7 @@ class Ui_noWiresClass
 public:
     QAction *actionOpen_File;
     QAction *actionSend;
+    QAction *actionRVI;
     QWidget *centralWidget;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
@@ -41,6 +42,8 @@ public:
         actionOpen_File->setObjectName(QStringLiteral("actionOpen_File"));
         actionSend = new QAction(noWiresClass);
         actionSend->setObjectName(QStringLiteral("actionSend"));
+        actionRVI = new QAction(noWiresClass);
+        actionRVI->setObjectName(QStringLiteral("actionRVI"));
         centralWidget = new QWidget(noWiresClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         noWiresClass->setCentralWidget(centralWidget);
@@ -57,6 +60,7 @@ public:
 
         mainToolBar->addAction(actionOpen_File);
         mainToolBar->addAction(actionSend);
+        mainToolBar->addAction(actionRVI);
 
         retranslateUi(noWiresClass);
 
@@ -70,7 +74,15 @@ public:
 #ifndef QT_NO_TOOLTIP
         actionOpen_File->setToolTip(QApplication::translate("noWiresClass", "Choose a file to open", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
+<<<<<<< HEAD
+        actionSend->setText(QApplication::translate("noWiresClass", "Send", 0));
+        actionRVI->setText(QApplication::translate("noWiresClass", "RVI", 0));
+#ifndef QT_NO_TOOLTIP
+        actionRVI->setToolTip(QApplication::translate("noWiresClass", "Send an RVI", 0));
+#endif // QT_NO_TOOLTIP
+=======
         actionSend->setText(QApplication::translate("noWiresClass", "Send", Q_NULLPTR));
+>>>>>>> 94e971d5aef3257c1a79f0fd2c8e2481c0e08fc1
     } // retranslateUi
 
 };

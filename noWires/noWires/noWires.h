@@ -18,12 +18,13 @@
 #include "dataFrame.h"
 #include "textBox.h"
 #include "CRCpp.h"
+#include "statusWindow.h"
 
 
 #define ACK 0x06
 #define ENQ 0x05
 #define SYN 0x16
-
+#define RVI 0x07
 
 class noWires : public QMainWindow
 {
@@ -31,6 +32,7 @@ class noWires : public QMainWindow
 
 public:
 	noWires(QWidget *parent = Q_NULLPTR);
+	~noWires();
 
 private:
 	QString comPort;
@@ -40,9 +42,15 @@ private:
 	QSerialPort *serial;
 	TextBox *textBox;
 	QByteArray buffer;
+<<<<<<< HEAD
 	bool retransmit;
 
+=======
+>>>>>>> 3ffd8fa6ae446b70b60a2911a8ec3ad201edaab9
 	Ui::noWiresClass ui;
+	statusWindow *monitor;
+
+	
 	inline void addButtons();
 	void openAFile();
 	void sendOneDataFrame();
@@ -57,6 +65,7 @@ public slots:
 	bool readData();
 	void startSending();
 	void connectPort();
+	void sendRVI();
 
 };
 

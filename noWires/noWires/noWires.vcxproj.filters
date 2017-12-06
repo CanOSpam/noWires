@@ -38,6 +38,9 @@
     <Filter Include="CRCpp">
       <UniqueIdentifier>{d957b14d-4dc5-4a49-b765-9dc5aa225a4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Status Window">
+      <UniqueIdentifier>{a01a9a57-2e6c-437b-b5f7-68512efe37f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Debug\moc_noWires.cpp">
@@ -76,6 +79,15 @@
     <ClCompile Include="uintOperators.cpp">
       <Filter>uint Operators</Filter>
     </ClCompile>
+    <ClCompile Include="statusWindow.cpp">
+      <Filter>Status Window</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_statusWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_statusWindow.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="noWires.ui">
@@ -89,6 +101,12 @@
     </CustomBuild>
     <CustomBuild Include="textBox.h">
       <Filter>textbox</Filter>
+    </CustomBuild>
+    <CustomBuild Include="statusWindow.ui">
+      <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="statusWindow.h">
+      <Filter>Status Window</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="CRCpp.h">
       <Filter>CRCpp</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_statusWindow.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

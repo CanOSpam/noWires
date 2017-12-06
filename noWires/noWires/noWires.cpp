@@ -10,8 +10,14 @@ noWires::noWires(QWidget *parent)
 	addButtons();
 
 	bool ok;
+
+	//Show Com select dialog
 	comPort = QInputDialog::getText(this, tr("Com picker"),
 		tr("Pick a com port"), QLineEdit::Normal, "COM1", &ok);
+
+	//Show Status monitor
+	monitor = new statusWindow();
+	monitor->show();
 
 	serial = new QSerialPort(comPort, this);
 	textBox = new TextBox;
@@ -22,11 +28,19 @@ noWires::noWires(QWidget *parent)
 
 }
 
+noWires::~noWires()
+{
+	delete monitor;
+	delete serial;
+	delete textBox;
+}
+
 inline void noWires::addButtons()
 {
 
 	connect(ui.actionSend, &QAction::triggered, this, &noWires::startSending);
 	connect(ui.actionOpen_File, &QAction::triggered, this, &noWires::openAFile);
+	connect(ui.actionRVI, &QAction::triggered, this, &noWires::sendRVI);
 	ui.actionSend->setEnabled(false);
 }
 
@@ -71,12 +85,24 @@ void noWires::sendOneDataFrame()
 			}
 			data[i] = character;
 		}
+<<<<<<< HEAD
 	
 	dataFrame frame(data);
 	qDebug() << frame.getFrame();
 	serial->write(frame.getFrame());
 	serial->flush();
 	
+=======
+		dataFrame frame(data);
+		qDebug() << frame.getFrame();
+		serial->write(frame.getFrame());
+		serial->flush();
+		break;
+
+	}
+	inputFile.close();
+	monitor->incrementTXFrames();
+>>>>>>> 3ffd8fa6ae446b70b60a2911a8ec3ad201edaab9
 }
 
 
@@ -103,6 +129,10 @@ bool noWires::readData()
 {
 	buffer.append(serial->readAll());
 
+	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ACK))
+	{
+		monitor->incrementAck();
+	}
 	if ((buffer[0] == (char)SYN) && (buffer[1] == (char)ENQ))
 	{
 		buffer.remove(0, 2);
@@ -112,6 +142,7 @@ bool noWires::readData()
 	{
 		if (buffer.size() >= 518)
 		{
+			monitor->incrementRXFrames();
 			//Data
 			QByteArray toRead(buffer, 518);
 			buffer.remove(0, 518);
@@ -139,6 +170,10 @@ bool noWires::readData()
 			{
 				textBox->putData(data);
 				sendACK();
+			}
+			else 
+			{
+				monitor->incrementErrors();
 			}
 			toRead.clear();
 		}
@@ -212,6 +247,12 @@ void noWires::sendENQ()
 void noWires::sendACK()
 {
 	controlFrame ack(QByteArray(1, ACK));
+	serial->write(ack.getFrame());
+}
+
+void noWires::sendRVI()
+{
+	controlFrame ack(QByteArray(1, RVI));
 	serial->write(ack.getFrame());
 }
 
