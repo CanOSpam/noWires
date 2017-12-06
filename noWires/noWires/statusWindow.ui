@@ -36,14 +36,35 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="FrameRXName_2">
+     <property name="text">
+      <string>Frames Sent</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="FramesTXNum">
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="FramesRXName">
      <property name="text">
       <string>Frames Received</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="FramesNum">
+    <widget class="QLabel" name="FramesRXNum">
      <property name="text">
       <string>0</string>
      </property>
